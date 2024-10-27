@@ -1,0 +1,18 @@
+.sidebar {
+  margin: 3px;
+  display: block;
+  border: 1px solid black;
+  border-radius: 20px;
+  display: block;
+}
+
+@media only screen and (max-width: 868px) {
+  .sidebar {
+    position: fixed;
+    z-index: 1;
+    display: block;
+    top: 16px;
+    left: 16px;
+    border: none;
+  }
+}

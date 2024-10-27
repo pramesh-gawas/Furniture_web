@@ -3,6 +3,7 @@ import style from "./HomePage.module.css";
 import { Box1 } from "./Box1";
 import { Footer } from "../components/Footer";
 import { Contact } from "../components/Contact";
+import { Spinner } from "../Spinner";
 export const HomePage = () => {
   return (
     <div className={style.main}>

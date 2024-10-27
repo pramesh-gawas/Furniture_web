@@ -6,7 +6,7 @@ export const Contact = () => {
   };
 
   return (
-    <div class="row  mt-5">
+    <div class="row  m-5">
       <div class="col-md-6">
         <img
           src="/images/living-room.jpg"

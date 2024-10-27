@@ -6,7 +6,7 @@ import { Contact } from "../components/Contact";
 export const Customers = () => {
   return (
     <>
-      <div class="container chat-container">
+      <div class="col-md-9 container chat-container">
         <div class="row">
           <div class="col-md-12">
             <div class="chat-header">

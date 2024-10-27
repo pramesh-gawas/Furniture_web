@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Footer } from "../components/Footer";
 import { Contact } from "../components/Contact";
+import { Spinner } from "../Spinner";
 export const Products = () => {
-  const [isloading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const url = "https://dummyjson.com/products/category/furniture";
   useEffect(() => {
@@ -19,20 +19,20 @@ export const Products = () => {
     fetchData();
   }, []);
 
-  console.log(data);
-
   return (
-    <div class="album py-3 ">
-      <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-          {data.map((item) => (
+    <div>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 m-3">
+        {!data ? (
+          <Spinner></Spinner>
+        ) : (
+          data.map((item) => (
             <div class="col" key={item.id}>
               <div class="card shadow-sm">
                 <title>title</title>
                 <rect width="100%" height="100%" fill="none">
                   <li style={{ listStyle: "none" }}>
-                    {!isloading ? (
-                      <p>loading.....</p>
+                    {!data ? (
+                      <Spinner></Spinner>
                     ) : (
                       <img src={item.images[0]} alt={item.brand} />
                     )}
@@ -50,8 +50,8 @@ export const Products = () => {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+          ))
+        )}
       </div>
       <Contact></Contact>
       <Footer></Footer>

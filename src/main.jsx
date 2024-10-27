@@ -5,16 +5,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { HomePage } from "./homepage/HomePage.jsx";
-import { Orders } from "./pages/Orders.jsx";
 import { Products } from "./pages/Products.jsx";
 import { Customers } from "./pages/Customers.jsx";
-
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      { path: "/", element: <HomePage></HomePage> },
+      {
+        path: "/",
+        element: <HomePage></HomePage>,
+      },
       {
         path: "/products",
         element: <Products></Products>,
