@@ -5,10 +5,7 @@ import { Spinner } from "./Spinner";
 function App() {
   return (
     <>
-      <div
-        className=" main d-flex flex-col w-100 "
-        style={{ position: "relative" }}
-      >
+      <div className=" main d-flex flex-col">
         <SideBar></SideBar>
         <Outlet></Outlet>
       </div>

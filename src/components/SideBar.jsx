@@ -6,7 +6,7 @@ import style from "../components/sidebar.module.css";
 export const SideBar = () => {
   return (
     <>
-      <div class={style.sidebar} style={{ width: "120px" }}>
+      <div class={style.sidebar} style={{ width: "8%" }}>
         <a href="/" class="link-body-emphasis text-decoration-none">
           <div class=" d-flex justify-content-center fs-4">PG</div>
         </a>
