@@ -6,8 +6,8 @@ export const Contact = () => {
   };
 
   return (
-    <div class="row  m-5">
-      <div class="col-md-6">
+    <div class="row m-5">
+      <div class="col-md-6 ">
         <img
           src="/images/living-room.jpg"
           alt="Contact Image"
@@ -28,8 +28,7 @@ export const Contact = () => {
               type="email"
               class="form-control"
               id="email"
-              placeholder="Enter   
-your email"
+              placeholder="Enter  your email"
               required
             />
           </div>
@@ -44,28 +43,18 @@ your email"
               required
             />
           </div>
-          <button
-            style={{ marginTop: "5px" }}
-            type="submit"
-            class="btn btn-primary"
-            onSubmit={formSubmit}
-          >
-            Submit
-          </button>
+          <a href="mailto:prameshgawas11@gmail.com">
+            <button
+              style={{ marginTop: "5px" }}
+              type="submit"
+              class="btn btn-primary"
+              onSubmit={formSubmit}
+            >
+              submit
+            </button>
+          </a>
         </form>
       </div>
-
-      {/*    <form action="https://formspree.io/f/xqazrrkj" method="POST">
-        <label>
-          Your email:
-          <input type="email" name="email" />
-        </label>
-        <label>
-          Your message:
-          <textarea name="message"></textarea>
-        </label>
-        <button type="submit">Send</button>
-      </form> */}
     </div>
   );
 };

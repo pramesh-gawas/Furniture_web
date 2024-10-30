@@ -8,7 +8,7 @@ export const SideBar = () => {
     <>
       <div class={style.sidebar} style={{ width: "8%" }}>
         <a href="/" class="link-body-emphasis text-decoration-none">
-          <div class=" d-flex justify-content-center fs-4">PG</div>
+          <div class=" homeLink d-flex justify-content-center fs-4">PG</div>
         </a>
         <hr />
         <ul class="nav nav-pills flex-column mb-auto">
