@@ -1,13 +1,14 @@
 import "./App.css";
-import { SideBar } from "./components/SideBar";
 import { Outlet } from "react-router-dom";
-import { Spinner } from "./Spinner";
+import { Header } from "./components/common/Header";
+import { Footer } from "./components/common/Footer";
 function App() {
   return (
     <>
       <div className=" main d-flex flex-col">
-        <SideBar></SideBar>
+        <Header />
         <Outlet></Outlet>
+        <Footer />
       </div>
     </>
   );
