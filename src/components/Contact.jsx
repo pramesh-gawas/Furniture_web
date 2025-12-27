@@ -16,11 +16,7 @@ export const Contact = () => {
       </div>
       <div class="col-md-6">
         <h2>Contact Us</h2>
-        <form
-          action="https://formsubmit.co/6e065dafb05467fda1a20b8b302b39cd"
-          method="POST"
-          target="_blank"
-        >
+        <form method="POST" target="_blank">
           <div class="form-group">
             <label for="email">Email:</label>
             <input

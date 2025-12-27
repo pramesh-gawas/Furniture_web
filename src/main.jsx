@@ -1,12 +1,15 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { HomePage } from "./homepage/HomePage.jsx";
-import { Products } from "./pages/Products.jsx";
-import { Customers } from "./pages/Customers.jsx";
+import { HomePage } from "./components/pages/HomePage.jsx";
+import { CheckOutPage } from "./components/pages/CheckOutPage.jsx";
+import { Shop } from "./components/pages/Shop.jsx";
+import { WishList } from "./components/pages/WishList.jsx";
+import { OrderHistory } from "./components/pages/OrderHistory.jsx";
+import { ProductDetail } from "./components/pages/ProductDetail.jsx";
+import { SignInLogIn } from "./components/SignInLogIn.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -17,12 +20,32 @@ const router = createBrowserRouter([
         element: <HomePage></HomePage>,
       },
       {
-        path: "/products",
-        element: <Products></Products>,
+        path: "/checkout",
+        element: <CheckOutPage />,
       },
       {
-        path: "/customers",
-        element: <Customers></Customers>,
+        path: "/shop",
+        element: <Shop />,
+      },
+      {
+        path: "/wish-list",
+        element: <WishList />,
+      },
+      {
+        path: "/order-history",
+        element: <OrderHistory />,
+      },
+      {
+        path: "/signIn",
+        element: <SignInLogIn />,
+      },
+      {
+        path: "/signUp",
+        element: <SignInLogIn />,
+      },
+      {
+        path: "/product/:id",
+        element: <ProductDetail />,
       },
     ],
   },
