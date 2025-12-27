@@ -1,5 +1,5 @@
 import React from "react";
- /import { formatPrice } from "../common/Format";
+import { formatPrice } from "../common/Format";
 
 export const WishList = () => {
   const [wishlistItems, setWishlistItems] = React.useState([
@@ -138,4 +138,4 @@ export const WishList = () => {
       </div>
     </div>
   );
-}
+};
