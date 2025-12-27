@@ -1,22 +1,34 @@
 import React from "react";
-
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 export const SignInLogIn = () => {
+  const [register, setRegister] = useState(false);
+  const Navigate = useNavigate();
+
+  const handleSetRegister = () => {
+    setRegister(!register);
+    if (register) {
+      Navigate("/signIn");
+    } else {
+      Navigate("/signUp");
+    }
+  };
   return (
     <>
-      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 bg-gray-900">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
-            alt="Your Company"
-            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-            className="mx-auto h-10 w-auto dark:hidden"
+            alt="furniture hub"
+            src="/images/logo_image.png"
+            className="mx-auto h-20 w-20 dark:hidden rounded-full"
           />
           <img
-            alt="Your Company"
-            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-            className="mx-auto h-10 w-auto not-dark:hidden"
+            alt="furniture hub"
+            src="/images/logo_image.png"
+            className="mx-auto h-20 w-20 not-dark:hidden rounded-full"
           />
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900 dark:text-white">
-            Sign in to your account
+            {register ? "Sign Up to your account" : "Sign in to your account"}
           </h2>
         </div>
 
@@ -75,19 +87,20 @@ export const SignInLogIn = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-none dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
               >
-                Sign in
+                {register ? "Sign up" : "Sign in"}
               </button>
             </div>
           </form>
 
           <p className="mt-10 text-center text-sm/6 text-gray-500 dark:text-gray-400">
             Not a member?{" "}
-            <a
-              href="#"
+            <button
+              href={register ? "signUp" : "signIn"}
               className="font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+              onClick={() => handleSetRegister()}
             >
-              Start a 14 day free trial
-            </a>
+              {register ? "signIn" : "signUp"}
+            </button>
           </p>
         </div>
       </div>

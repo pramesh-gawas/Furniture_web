@@ -4,10 +4,12 @@ import App from "./App.jsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { HomePage } from "./components/pages/HomePage.jsx";
-import CheckOutPage from "./components/pages/CheckOutPage.jsx";
-import ProductCatelog from "./components/pages/ProductCatelog.jsx";
-import WishList from "./components/pages/WishList.jsx";
-import OrderHistory from "./components/pages/OrderHistory.jsx";
+import { CheckOutPage } from "./components/pages/CheckOutPage.jsx";
+import { Shop } from "./components/pages/Shop.jsx";
+import { WishList } from "./components/pages/WishList.jsx";
+import { OrderHistory } from "./components/pages/OrderHistory.jsx";
+import { ProductDetail } from "./components/pages/ProductDetail.jsx";
+import { SignInLogIn } from "./components/SignInLogIn.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,7 +25,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/shop",
-        element: <ProductCatelog />,
+        element: <Shop />,
       },
       {
         path: "/wish-list",
@@ -32,6 +34,18 @@ const router = createBrowserRouter([
       {
         path: "/order-history",
         element: <OrderHistory />,
+      },
+      {
+        path: "/signIn",
+        element: <SignInLogIn />,
+      },
+      {
+        path: "/signUp",
+        element: <SignInLogIn />,
+      },
+      {
+        path: "/product/:id",
+        element: <ProductDetail />,
       },
     ],
   },

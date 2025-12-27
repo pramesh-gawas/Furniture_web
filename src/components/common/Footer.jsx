@@ -12,13 +12,13 @@ export const Footer = () => {
           <div className="space-y-8">
             <img
               alt="Furniture Store"
-              src="https://tailwindcss.com/plus-assets/img/logos/workcation-logo-indigo-600.svg"
+              src="/images/logo_image.png"
               className="h-10 dark:hidden"
             />
             <img
               alt="Furniture Store"
-              src="https://tailwindcss.com/plus-assets/img/logos/workcation-logo-indigo-400.svg"
-              className="h-10 hidden dark:block"
+              src="/images/logo_image.png"
+              className="h-10 hidden dark:block rounded-full"
             />
             <p className="text-sm/6 text-gray-600 dark:text-gray-400 max-w-xs">
               Crafting comfort for modern living. Elevate your space with our

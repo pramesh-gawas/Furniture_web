@@ -1,41 +1,195 @@
 import React from "react";
+import { formatPrice } from "../common/Format";
+export const OrderHistory = () => {
+  const items = [
+    {
+      id: 1,
+      title: "Minimalist Living Room",
+      description: "Discover our new Scandinavian collection for 2025.",
+      image:
+        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=1920",
+      cta: "Shop Seating",
+      price: 400,
+    },
+    {
+      id: 2,
+      title: "Modern Office Spaces",
+      description: "Ergonomic designs to boost your home productivity.",
+      image:
+        "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1920",
+      cta: "View Desks",
+      price: 500,
+    },
+    {
+      id: 3,
+      title: "Sustainable Bedroom",
+      description: "Ethically sourced oak and linen for a better sleep.",
+      image:
+        "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&q=80&w=1920",
+      cta: "Shop Dining",
+      price: 700,
+    },
+    {
+      id: 4,
+      title: "Minimalist Living Room",
+      description: "Discover our new Scandinavian collection for 2025.",
+      image:
+        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=1920",
+      cta: "Shop Seating",
+      price: 400,
+    },
+    {
+      id: 5,
+      title: "Minimalist Living Room",
+      description: "Discover our new Scandinavian collection for 2025.",
+      image:
+        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=1920",
+      cta: "Shop Seating",
+      price: 400,
+    },
+    {
+      id: 6,
+      title: "Modern Office Spaces",
+      description: "Ergonomic designs to boost your home productivity.",
+      image:
+        "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1920",
+      cta: "View Desks",
+      price: 500,
+    },
+    {
+      id: 7,
+      title: "Sustainable Bedroom",
+      description: "Ethically sourced oak and linen for a better sleep.",
+      image:
+        "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&q=80&w=1920",
+      cta: "Shop Dining",
+      price: 700,
+    },
+    {
+      id: 8,
+      title: "Minimalist Living Room",
+      description: "Discover our new Scandinavian collection for 2025.",
+      image:
+        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=1920",
+      cta: "Shop Seating",
+      price: 400,
+    },
+    {
+      id: 9,
+      title: "Modern Office Spaces",
+      description: "Ergonomic designs to boost your home productivity.",
+      image:
+        "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&q=80&w=1920",
+      cta: "View Desks",
+      price: 500,
+    },
+    {
+      id: 10,
+      title: "Sustainable Bedroom",
+      description: "Ethically sourced oak and linen for a better sleep.",
+      image:
+        "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&q=80&w=1920",
+      cta: "Shop Dining",
+      price: 700,
+    },
+  ];
 
-const OrderHistory = () => {
+  const [selectedItem, setSelectedItem] = React.useState(
+    items[items.length - 1]
+  );
+
+  const subtotal = items.reduce((sum, item) => sum + item.price, 0);
+  const tax = subtotal * 0.1;
+  const total = subtotal + tax;
+
   return (
-    <>
-      {" "}
-      <div className="bg-white dark:bg-gray-900">
-        <div className="relative isolate px-6 pt-14 lg:px-8">
-          <div
-            aria-hidden="true"
-            className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
-          >
-            <div
-              style={{
-                clipPath:
-                  "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-              }}
-              className="relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75"
-            />
-          </div>
+    <div className="min-h-screen py-32 px-4 dark:bg-gray-900">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-4xl font-bold text-gray-900 mb-8 dark:text-white">
+          My Cart
+        </h1>
 
-          <div
-            aria-hidden="true"
-            className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
-          >
-            <div
-              style={{
-                clipPath:
-                  "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-              }}
-              className="relative left-[calc(50%+3rem)] aspect-1155/678 w-144.5 -translate-x-1/2 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-288.75"
-            />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-1">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+                Items in Bag
+              </h2>
+              <div
+                className={`${
+                  items.length > 6 ? "max-h-96 overflow-y-auto" : ""
+                }`}
+              >
+                {items.map((item) => (
+                  <div
+                    key={item.id}
+                    className={`p-3 rounded cursor-pointer transition mb-2 d-flex flex justify-between items-center ${
+                      selectedItem.id === item.id
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                    }`}
+                  >
+                    <div onClick={() => setSelectedItem(item)}>
+                      <div className="font-semibold">{item.title}</div>
+                      <div className="text-sm">{formatPrice(item.price)}</div>
+                    </div>
+                    <div className="flex space-x-2">
+                      <button className="w-8 h-8 text-white rounded-full bg-red-500 flex items-center justify-center">
+                        <span>−</span>
+                      </button>
+                      <button className="w-8 h-8 text-white rounded-full bg-blue-500 flex items-center justify-center">
+                        <span>♡</span>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex justify-between mb-2 text-gray-700 dark:text-gray-300">
+                  <span>Subtotal:</span>
+                  <span>{formatPrice(subtotal.toFixed(2))}</span>
+                </div>
+                <div className="flex justify-between mb-4 text-gray-700 dark:text-gray-300">
+                  <span>Tax (10%):</span>
+                  <span>{formatPrice(tax.toFixed(2))}</span>
+                </div>
+                <div className="flex justify-between text-xl font-bold text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 p-3 rounded">
+                  <span>Total:</span>
+                  <span>{formatPrice(total.toFixed(2))}</span>
+                </div>
+                <button className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                  Proceed to Payment
+                </button>
+              </div>
+            </div>
+          </div>
+          {/* Item Details */}
+          <div className="lg:col-span-2">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+                Item Details
+              </h2>
+              <img
+                src={selectedItem.image}
+                alt={selectedItem.name}
+                className="w-full h-64 object-cover rounded mb-4"
+              />
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                {selectedItem.name}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                {selectedItem.title}
+              </p>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                {selectedItem.description}
+              </p>
+              <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                {formatPrice(selectedItem.price)}
+              </p>
+            </div>
           </div>
         </div>
       </div>
-      <div>order history</div>
-    </>
+    </div>
   );
 };
-
-export default OrderHistory;

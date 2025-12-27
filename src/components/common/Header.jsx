@@ -19,7 +19,7 @@ export const Header = () => {
         className="flex items-center justify-between p-6 lg:px-8"
       >
         <div className="flex lg:flex-1">
-          <a href="/" className="-m-1.5 p-1.5 not-dark ">
+          <a href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Furniture Hub</span>
             <img
               alt="logo_image.png"
@@ -29,8 +29,11 @@ export const Header = () => {
             <img
               alt="logo_image.png"
               src="/images/logo_image.png"
-              className="h-18 rounded-lg w-auto not-dark:hidden"
+              className="h-12 rounded-full w-auto not-dark:hidden"
             />
+            <span className="ml-2 text-lg font-semibold text-gray-900 dark:text-white">
+              Furniture Hub
+            </span>
           </a>
         </div>
         <div className="flex lg:hidden">
@@ -63,7 +66,7 @@ export const Header = () => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-6"
+              className="size-6 text-white"
             >
               <path
                 strokeLinecap="round"
@@ -79,7 +82,7 @@ export const Header = () => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="size-6"
+              className="size-6 text-white"
             >
               <path
                 strokeLinecap="round"
@@ -91,12 +94,12 @@ export const Header = () => {
         </div>
         <div></div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a
-            href="#"
+          <Link
+            to="/signIn"
             className="text-sm/6 font-semibold text-gray-900 dark:text-white"
           >
-            Log in <span aria-hidden="true">&rarr;</span>
-          </a>
+            Sign in <span aria-hidden="true">&rarr;</span>
+          </Link>
         </div>
       </nav>
       <Dialog
@@ -108,17 +111,20 @@ export const Header = () => {
         <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:bg-gray-900 dark:sm:ring-gray-100/10">
           <div className="flex items-center justify-between">
             <a href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
+              <span className="sr-only">Furniture Hub</span>
               <img
-                alt=""
-                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+                alt="logo_image.png"
+                src="/images/logo_image.png"
                 className="h-8 w-auto dark:hidden"
               />
               <img
-                alt=""
-                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                className="h-8 w-auto not-dark:hidden"
+                alt="logo_image.png"
+                src="/images/logo_image.png"
+                className="h-8 w-auto items-center not-dark:hidden"
               />
+              <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                Furniture Hub
+              </span>
             </a>
             <button
               type="button"
@@ -136,7 +142,6 @@ export const Header = () => {
                   <Link
                     to={item.href}
                     key={item.name}
-                    href={item.href}
                     className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
                   >
                     {item.name}
