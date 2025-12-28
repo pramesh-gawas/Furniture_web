@@ -1,42 +1,15 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { formatPrice } from "../common/Format";
-
+import { toggleWishList } from "../../store/wishlistSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addItem } from "../../store/cartSlice";
 export const ProductDetail = () => {
+  const { items } = useSelector((store) => store.product);
   const { id } = useParams();
-  const products = [
-    {
-      id: 1,
-      name: "Wooden Chair",
-      price: "$199",
-      image: "images/chair.jpg",
-      description: "A comfortable wooden chair perfect for your dining room.",
-    },
-    {
-      id: 2,
-      name: "Leather Sofa",
-      price: "899",
-      image: "images/bedroom-min.jpg",
-      description: "Luxurious leather sofa for your living room.",
-    },
-    {
-      id: 3,
-      name: "Glass Table",
-      price: "299",
-      image: "images/bedroom_furniture.png",
-      description: "Elegant glass table that adds style to any space.",
-    },
-    {
-      id: 4,
-      name: "Bed Frame",
-      price: "599",
-      image: "images/bedroom_furniture_2.png",
-      description: "Sturdy bed frame for a good night's sleep.",
-    },
-  ];
-
-  const product = products.find((p) => p.id === parseInt(id));
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const product = items.find((p) => p.id === parseInt(id));
   if (!product) {
     return (
       <div className="px-6 py-32 lg:px-8 bg-gray-900 text-white">
@@ -44,6 +17,14 @@ export const ProductDetail = () => {
       </div>
     );
   }
+
+  const handleToggle = (item) => {
+    dispatch(toggleWishList(item));
+  };
+
+  const handleAddToCart = (item) => {
+    dispatch(addItem(item));
+  };
 
   return (
     <div className="px-6 py-32 lg:px-8 bg-gray-900 text-white">
@@ -63,11 +44,23 @@ export const ProductDetail = () => {
             </p>
             <p className="text-gray-300 mb-6">{product.description}</p>
             <div className="flex gap-4">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition">
+              <button
+                onClick={() => handleAddToCart(product)}
+                className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition"
+              >
                 Add to Cart
               </button>
-              <button className="bg-gray-600 hover:bg-gray-700 text-white py-3 px-6 rounded-lg font-medium transition">
+              <button
+                onClick={() => handleToggle(product)}
+                className="bg-gray-600 hover:bg-gray-700 text-white py-3 px-6 rounded-lg font-medium transition"
+              >
                 ♡ Add to Wishlist
+              </button>
+              <button
+                onClick={() => navigate("/checkout")}
+                className="bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-medium transition"
+              >
+                Proceed to Payment
               </button>
             </div>
           </div>
