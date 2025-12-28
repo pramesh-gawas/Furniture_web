@@ -1,11 +1,8 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export const CheckOutPage = () => {
-  const [cartItems] = useState([
-    { id: 1, name: "Wooden Chair", price: 150, quantity: 1 },
-    { id: 2, name: "Dining Table", price: 500, quantity: 1 },
-  ]);
-
+  const { items } = useSelector((store) => store.cart);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -21,7 +18,7 @@ export const CheckOutPage = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const subtotal = cartItems.reduce(
+  const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
@@ -30,6 +27,9 @@ export const CheckOutPage = () => {
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const address = Object.fromEntries(formData.entries());
+    console.log(address);
     alert("Order placed successfully!");
   };
 
@@ -45,7 +45,7 @@ export const CheckOutPage = () => {
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">
                 Order Summary
               </h2>
-              {cartItems.map((item) => (
+              {items.map((item) => (
                 <div
                   key={item.id}
                   className="flex justify-between py-2 border-b border-gray-200"

@@ -4,15 +4,17 @@ import { ProductList } from "../ProductList";
 import { useState, useEffect } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { CategorySection } from "../common/CategorySection";
-
 const slides = [
   {
     id: 1,
-    title: "Minimalist Living Room",
+    name: "Minimalist Living Room",
     description: "Discover our new Scandinavian collection for 2025.",
     image:
       "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=1920",
     cta: "Shop Seating",
+    price: "455",
+    quantity: 1,
+    totalPrice: 5645,
   },
   {
     id: 2,
@@ -24,7 +26,7 @@ const slides = [
   },
   {
     id: 3,
-    title: "Sustainable Bedroom",
+    name: "Sustainable Bedroom",
     description: "Ethically sourced oak and linen for a better sleep.",
     image:
       "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&q=80&w=1920",

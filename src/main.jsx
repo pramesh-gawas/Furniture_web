@@ -10,6 +10,8 @@ import { WishList } from "./components/pages/WishList.jsx";
 import { OrderHistory } from "./components/pages/OrderHistory.jsx";
 import { ProductDetail } from "./components/pages/ProductDetail.jsx";
 import { SignInLogIn } from "./components/SignInLogIn.jsx";
+import { Provider } from "react-redux";
+import Store from "./store/index.js";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -53,6 +55,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router}> </RouterProvider>
+    <Provider store={Store}>
+      <RouterProvider router={router}> </RouterProvider>
+    </Provider>
   </StrictMode>
 );
