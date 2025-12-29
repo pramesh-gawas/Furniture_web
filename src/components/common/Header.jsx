@@ -11,9 +11,17 @@ export const Header = () => {
     { name: "Checkout", href: "/checkout" },
   ];
 
+  const mobileNavigation = [
+    { name: "Home", href: "/" },
+    { name: "Shop", href: "/shop" },
+    { name: "Wish List", href: "/wish-list" },
+    { name: "My Cart", href: "/order-history" },
+    { name: "Checkout", href: "/checkout" },
+  ];
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
-    <header className="absolute inset-x-0 top-0 z-50">
+    <header className="fixed inset-x-0 top-0 z-50">
       <nav
         aria-label="Global"
         className="flex items-center justify-between p-6 lg:px-8"
@@ -115,12 +123,12 @@ export const Header = () => {
               <img
                 alt="logo_image.png"
                 src="/images/logo_image.png"
-                className="h-8 w-auto dark:hidden"
+                className="h-8 w-auto dark:hidden rounded-full"
               />
               <img
                 alt="logo_image.png"
                 src="/images/logo_image.png"
-                className="h-8 w-auto items-center not-dark:hidden"
+                className="h-8 w-auto items-center not-dark:hidden rounded-full"
               />
               <span className="text-lg font-semibold text-gray-900 dark:text-white">
                 Furniture Hub
@@ -138,8 +146,9 @@ export const Header = () => {
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10 dark:divide-white/10">
               <div className="space-y-2 py-6">
-                {navigation.map((item) => (
+                {mobileNavigation.map((item) => (
                   <Link
+                    onClick={() => setMobileMenuOpen(false)}
                     to={item.href}
                     key={item.name}
                     className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
@@ -150,10 +159,16 @@ export const Header = () => {
               </div>
               <div className="py-6">
                 <a
-                  href="#"
+                  href="/signUp"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
                 >
-                  Log in
+                  Sign Up
+                </a>
+                <a
+                  href="/signIn"
+                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
+                >
+                  Sign in
                 </a>
               </div>
             </div>
