@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { formatPrice } from "../common/Format";
 import { Pagination } from "../common/Pagination";
@@ -7,8 +7,8 @@ import { addItem } from "../../store/cartSlice";
 import { toggleWishList } from "../../store/wishlistSlice";
 import { Sidebar } from "../common/Sidebar";
 export const Shop = () => {
-  const { filteredItems } = useSelector((store) => store.product);
-  const { items } = useSelector((store) => store.wishlist);
+  const { filteredItems, items } = useSelector((store) => store.product);
+  const wishlist = useSelector((store) => store.wishlist);
   const dispatch = useDispatch();
   const Navigate = useNavigate();
   const handleAddToCart = (item) => {
@@ -21,13 +21,15 @@ export const Shop = () => {
   const handleAddToWishList = (item) => {
     dispatch(toggleWishList(item));
   };
+
+  const product = filteredItems.length > 0 ? filteredItems : items;
   return (
     <div className="px-6 py-32 lg:px-2 bg-gray-900 flex">
       <Sidebar />
       <div className="w-full lg:w-3/4">
         <Pagination />
         <div className="px-3 py-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
-          {filteredItems?.map((item) => (
+          {product?.map((item) => (
             <div
               key={item.id}
               className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition block"
@@ -49,12 +51,16 @@ export const Shop = () => {
                     <button
                       onClick={() => handleAddToWishList(item)}
                       className={`h-8 w-8 bg-gray-300 hover:bg-gray-400 py-1 px-2 rounded-full font-medium transition ${
-                        items.some((wishItem) => wishItem.id === item.id)
+                        wishlist.items.some(
+                          (wishItem) => wishItem.id === item.id
+                        )
                           ? "text-red-500"
                           : "text-gray-900"
                       }`}
                     >
-                      {items.some((wishItem) => wishItem.id === item.id)
+                      {wishlist.items.some(
+                        (wishItem) => wishItem.id === item.id
+                      )
                         ? "♥"
                         : "♡"}
                     </button>

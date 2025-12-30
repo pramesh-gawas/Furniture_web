@@ -1,15 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import { filterByCategory, sortByPrice } from "../../store/productSlice";
 
 export const Sidebar = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
+  const categoryFromUrl = searchParams.get("category") || "all";
+  useEffect(() => {
+    dispatch(filterByCategory(categoryFromUrl));
+  }, [categoryFromUrl, dispatch]);
+
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedSort, setSelectedSort] = useState("");
-
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
+    setSearchParams(e.target.value);
   };
 
   const handleSortChange = (e) => {

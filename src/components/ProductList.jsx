@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { addItem } from "../store/cartSlice";
 import { useSelector } from "react-redux";
 import { toggleWishList } from "../store/wishlistSlice";
+import { Link } from "react-router-dom";
 
 export const ProductList = () => {
   const Navigate = useNavigate();
@@ -32,11 +33,13 @@ export const ProductList = () => {
               key={item.id}
               className="bg-gray-800 rounded-lg overflow-hidden hover:shadow-lg transition block "
             >
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full h-64 object-cover"
-              />
+              <Link to={`/product/${item.id}`}>
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-full h-64 object-cover"
+                />
+              </Link>
               <div className="p-4">
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="text-lg font-semibold text-white">
