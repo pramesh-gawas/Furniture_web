@@ -5,12 +5,13 @@ import { useDispatch } from "react-redux";
 import { addItem } from "../store/cartSlice";
 import { useSelector } from "react-redux";
 import { toggleWishList } from "../store/wishlistSlice";
+import { Link } from "react-router-dom";
 
 export const ProductList = () => {
   const Navigate = useNavigate();
   const dispatch = useDispatch();
   const { items } = useSelector((store) => store.product);
-
+  const wishlist = useSelector((store) => store.wishlist);
   const handleBuy = (item) => {
     Navigate(`/product/${item.id}`);
   };
@@ -18,7 +19,7 @@ export const ProductList = () => {
   const handleAddToCart = (item) => {
     dispatch(addItem(item));
   };
-  const handleProductList = (item) => {
+  const handleAddToWishList = (item) => {
     dispatch(toggleWishList(item));
   };
 
@@ -32,11 +33,13 @@ export const ProductList = () => {
               key={item.id}
               className="bg-gray-800 rounded-lg overflow-hidden hover:shadow-lg transition block "
             >
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-full h-64 object-cover"
-              />
+              <Link to={`/product/${item.id}`}>
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-full h-64 object-cover"
+                />
+              </Link>
               <div className="p-4">
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="text-lg font-semibold text-white">
@@ -44,12 +47,22 @@ export const ProductList = () => {
                   </h3>
                   <div className="relative group">
                     <button
-                      onClick={() => handleProductList(item)}
-                      className="bg-gray-600 hover:bg-gray-700 text-white p-2 rounded-lg font-medium transition"
+                      onClick={() => handleAddToWishList(item)}
+                      className={`h-8 w-8 bg-gray-300 hover:bg-gray-400 py-1 px-2 rounded-full font-medium transition ${
+                        wishlist.items.some(
+                          (wishItem) => wishItem.id === item.id
+                        )
+                          ? "text-red-500"
+                          : "text-gray-900"
+                      }`}
                     >
-                      ♡
+                      {wishlist.items.some(
+                        (wishItem) => wishItem.id === item.id
+                      )
+                        ? "♥"
+                        : "♡"}
                     </button>
-                    <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-sm rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition z-index-1">
+                    <span className="absolute bottom-full left-1/15 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-sm rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition">
                       Add to wishlist
                     </span>
                   </div>

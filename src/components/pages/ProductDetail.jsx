@@ -25,6 +25,10 @@ export const ProductDetail = () => {
   const handleAddToCart = (item) => {
     dispatch(addItem(item));
   };
+  const handlePayment = (item) => {
+    dispatch(addItem(item));
+    navigate("/checkout");
+  };
 
   return (
     <div className="px-6 py-32 lg:px-8 bg-gray-900 text-white">
@@ -57,7 +61,7 @@ export const ProductDetail = () => {
                 ♡ Add to Wishlist
               </button>
               <button
-                onClick={() => navigate("/checkout")}
+                onClick={() => handlePayment(product)}
                 className="bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-medium transition"
               >
                 Proceed to Payment

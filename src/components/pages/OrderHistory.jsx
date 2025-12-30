@@ -1,7 +1,7 @@
 import React from "react";
 import { formatPrice } from "../common/Format";
 import { useDispatch, useSelector } from "react-redux";
-import { removeItem } from "../../store/cartSlice";
+import { addItem, clearCart, removeItem } from "../../store/cartSlice";
 import { useNavigate } from "react-router-dom";
 export const OrderHistory = () => {
   const { items } = useSelector((store) => store.cart);
@@ -18,6 +18,10 @@ export const OrderHistory = () => {
   const total = subtotal + tax;
   const handleRemoveItem = (id) => {
     dispatch(removeItem(id));
+  };
+
+  const handleAddItem = (item) => {
+    dispatch(addItem(item));
   };
 
   const handlePayment = () => {
@@ -43,9 +47,17 @@ export const OrderHistory = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-1">
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-                  Items in Bag
-                </h2>
+                <div className="flex space-x-7 ">
+                  <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+                    Items in Bag
+                  </h2>
+                  <button
+                    onClick={() => dispatch(clearCart())}
+                    className="bg-blue-500 p-2 rounded-lg text-2xl font-semibold text-gray-900 dark:text-white mb-4"
+                  >
+                    Clear Cart
+                  </button>
+                </div>
                 <div
                   className={`${
                     items.length > 6 ? "max-h-96 overflow-y-auto" : ""
@@ -53,27 +65,46 @@ export const OrderHistory = () => {
                 >
                   {items?.map((item) => (
                     <div
+                      onClick={() => setSelectedItem(item)}
                       key={item.id}
-                      className={`p-3 rounded cursor-pointer transition mb-2 d-flex flex justify-between items-center ${
+                      className={`p-3 rounded transition mb-2 d-flex flex justify-between items-center ${
                         selectedItem.id === item.id
                           ? "bg-blue-500 text-white"
                           : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
                       }`}
                     >
-                      <div onClick={() => setSelectedItem(item)}>
+                      <div>
                         <div className="font-semibold">{item.name}</div>
                         <div className="text-sm">{formatPrice(item.price)}</div>
                       </div>
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-3">
                         <button
                           onClick={() => handleRemoveItem(item.id)}
-                          className="cursor-pointer w-8 h-8 text-white rounded-full bg-red-500 flex items-center justify-center"
+                          className=" cursor-pointer w-8 h-8 text-white rounded-full bg-red-500 flex items-center justify-center"
                         >
                           <span>−</span>
                         </button>
-                        <button className=" cursor-pointer w-8 h-8 text-white rounded-full bg-blue-500 flex items-center justify-center">
-                          <span>♡</span>
-                        </button>
+
+                        <div className="d-flex p-2">
+                          <p className="font-bold">Q</p>
+                        </div>
+                        <div>
+                          <button
+                            onClick={() => handleAddItem(item)}
+                            className="mb-1 cursor-pointer w-6 h-6 text-white rounded-full bg-green-500 flex items-center justify-center "
+                          >
+                            +
+                          </button>
+                          <p className="bg-white text-black rounded-full flex items-center justify-center">
+                            {item.quantity}
+                          </p>
+                          <button
+                            onClick={() => handleRemoveItem(item.id)}
+                            className=" mt-1 cursor-pointer w-6 h-6 text-white rounded-full bg-red-500 flex items-center justify-center"
+                          >
+                            -
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
