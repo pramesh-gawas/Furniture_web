@@ -36,11 +36,11 @@ export const WishList = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {items?.map((item) => (
               <div
-                key={item.id}
+                key={item._id}
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden"
               >
                 <img
-                  src={item.image}
+                  src={item.image[0]}
                   alt={item.title}
                   className="w-full h-36 object-cover"
                 />

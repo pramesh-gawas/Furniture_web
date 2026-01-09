@@ -14,13 +14,13 @@ export const CategorySection = () => {
         <div className="flex flex-row items-center justify-center gap-4 overflow-x-auto pb-4 scrollbar-hide">
           {items.map((category) => (
             <Link
-              key={category.name}
+              key={category._id}
               to={`/shop?category=${category.category}`}
               className="group flex flex-col items-center min-w-[120px] lg:min-w-[150px]"
             >
               <div className="relative h-24 w-24 sm:h-32 sm:w-32 overflow-hidden rounded-full border-2 border-gray-100 dark:border-gray-800 transition-all duration-300 group-hover:border-indigo-600 group-hover:shadow-lg">
                 <img
-                  src={category.image}
+                  src={category.image[0]}
                   alt={category.name}
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
