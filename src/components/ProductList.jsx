@@ -49,7 +49,7 @@ export const ProductList = () => {
               >
                 <Link to={`/product/${item._id}`}>
                   <img
-                    src={item?.image[0]}
+                    src={item?.images}
                     alt={item.name}
                     className="w-full h-64 object-cover"
                   />
@@ -64,14 +64,14 @@ export const ProductList = () => {
                         onClick={() => handleAddToWishList(item)}
                         className={`h-8 w-8 bg-gray-300 hover:bg-gray-400 py-1 px-2 rounded-full font-medium transition ${
                           wishlist.items.some(
-                            (wishItem) => wishItem.id === item.id
+                            (wishItem) => wishItem._id === item._id
                           )
                             ? "text-red-500"
                             : "text-gray-900"
                         }`}
                       >
                         {wishlist.items.some(
-                          (wishItem) => wishItem.id === item.id
+                          (wishItem) => wishItem._id === item._id
                         )
                           ? "♥"
                           : "♡"}

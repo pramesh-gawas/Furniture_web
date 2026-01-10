@@ -1,22 +1,37 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { filterByCategory, sortByPrice } from "../../store/productSlice";
+import {
+  filterByCategory,
+  setProducts,
+  sortByPrice,
+} from "../../store/productSlice";
+import { useFetch } from "../../utils/useFetch";
+import { Spinner } from "./Spinner";
 
 export const Sidebar = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedSort, setSelectedSort] = useState("");
+  const { data, loading, error } = useFetch(
+    `${apiUrl}/shop/productlist?sort=${selectedSort}&category=${selectedCategory}`
+  );
+  const {
+    data: categoryData,
+    loading: categoryLoading,
+    error: categoryError,
+  } = useFetch(`${apiUrl}/shop/categories`);
   const categoryFromUrl = searchParams.get("category") || "all";
   useEffect(() => {
     dispatch(filterByCategory(categoryFromUrl));
   }, [categoryFromUrl, dispatch]);
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedSort, setSelectedSort] = useState("");
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
-    setSearchParams(e.target.value);
+    setSearchParams({ category: e.target.value });
   };
 
   const handleSortChange = (e) => {
@@ -24,8 +39,8 @@ export const Sidebar = () => {
   };
 
   const handleApply = () => {
-    dispatch(filterByCategory(selectedCategory));
-    dispatch(sortByPrice(selectedSort));
+    dispatch(setProducts(data.response));
+    setSearchParams({ category: selectedCategory, sort: selectedSort });
     setIsOpen(false);
   };
 
@@ -46,13 +61,15 @@ export const Sidebar = () => {
 
       {/* Sidebar */}
       <div
-        className={`lg:w-1/4 bg-gray-800 text-white p-4 ${
+        className={`lg:w-1/4 bg-gray-800 text-white p-7 ${
+          !isOpen ? "rounded-full" : ""
+        }  ${
           isOpen ? "block" : "hidden"
         } lg:block fixed lg:relative top-0 left-0 w-full lg:w-auto h-full lg:h-auto ${
           isOpen ? "z-50" : "z-40"
         }`}
       >
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center m-4">
           <h2 className="text-xl font-bold">Filters</h2>
           <button
             className="lg:hidden text-white text-2xl"
@@ -71,9 +88,11 @@ export const Sidebar = () => {
             value={selectedCategory}
           >
             <option value="all">All</option>
-            <option value="living">Living</option>
-            <option value="office">Office</option>
-            <option value="bedroom">Bedroom</option>
+            {categoryData?.response.map((category, index) => (
+              <option key={index} value={category}>
+                {category}
+              </option>
+            ))}
           </select>
         </div>
 
