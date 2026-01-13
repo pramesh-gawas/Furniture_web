@@ -29,7 +29,7 @@ export const CheckOutPage = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const address = Object.fromEntries(formData.entries());
-    console.log(address);
+
     alert("Order placed successfully!");
   };
 

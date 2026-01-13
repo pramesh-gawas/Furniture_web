@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../store/userSlice";
 
 export const Header = () => {
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const navigation = [
     { name: "Home", href: "/" },
     { name: "Shop", href: "/shop" },
@@ -102,12 +105,21 @@ export const Header = () => {
         </div>
         <div></div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <Link
-            to="/signIn"
-            className="text-sm/6 font-semibold text-gray-900 dark:text-white"
-          >
-            Sign in <span aria-hidden="true">&rarr;</span>
-          </Link>
+          {!user ? (
+            <Link
+              to="/signIn"
+              className="text-sm/6 font-semibold text-gray-900 dark:text-white"
+            >
+              Sign in <span aria-hidden="true">&rarr;</span>
+            </Link>
+          ) : (
+            <button
+              onClick={() => dispatch(logout())}
+              className="-m-2.5 inline-flex items-center justify-center  p-2.5 text-red-500 font-bold"
+            >
+              LogOut
+            </button>
+          )}
         </div>
       </nav>
       <Dialog
@@ -158,18 +170,30 @@ export const Header = () => {
                 ))}
               </div>
               <div className="py-6">
-                <a
-                  href="/signUp"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
-                >
-                  Sign Up
-                </a>
-                <a
-                  href="/signIn"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
-                >
-                  Sign in
-                </a>
+                {!user ? (
+                  <>
+                    {" "}
+                    <a
+                      href="/signUp"
+                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
+                    >
+                      Sign Up
+                    </a>
+                    <a
+                      href="/signIn"
+                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
+                    >
+                      Sign in
+                    </a>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => dispatch(logout())}
+                    className="-m-2.5 inline-flex items-center justify-center  p-2.5 text-red-500 font-bold"
+                  >
+                    LogOut
+                  </button>
+                )}
               </div>
             </div>
           </div>

@@ -2,15 +2,18 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useFetch } from "../utils/useFetch";
+import { useDispatch } from "react-redux";
+import { jwtDecode } from "jwt-decode";
+import { setCredentials } from "../store/userSlice";
 export const SignInLogIn = () => {
   const [register, setRegister] = useState(false);
   const Navigate = useNavigate();
+  const dispatch = useDispatch();
   const apiUrl = import.meta.env.VITE_API_URL;
   const [formData, setFormData] = useState(null);
   const [triggerUrl, setTriggerUrl] = useState(null);
   const location = useLocation();
   const { data, loading, error } = useFetch(triggerUrl, "POST", formData);
-  console.log(error);
   const handleSubmit = (e) => {
     e.preventDefault();
     const formdata = new FormData(e.currentTarget);
@@ -21,10 +24,14 @@ export const SignInLogIn = () => {
 
   useEffect(() => {
     if (data?.token) {
-      if (location.pathname == "/signUp") Navigate("/shop");
-      if (data.token !== null) localStorage.setItem("login", data?.token);
-      if (location.pathname == "/signIn") Navigate("/shop");
-      localStorage.getItem("login");
+      const token = data.token;
+      const decodedUser = jwtDecode(token);
+      const userData = {
+        ...decodedUser,
+        token: token,
+      };
+      dispatch(setCredentials(userData));
+      Navigate("/shop");
     }
   }, [data, Navigate]);
   const handleSetRegister = () => {

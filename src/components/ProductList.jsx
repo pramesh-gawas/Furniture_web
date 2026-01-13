@@ -24,7 +24,7 @@ export const ProductList = () => {
     }
   }, [data, dispatch]);
   const handleBuy = (item) => {
-    Navigate(`/product/${item.id}`);
+    Navigate(`/product/${item._id}`);
   };
 
   const handleAddToCart = (item) => {
@@ -49,7 +49,7 @@ export const ProductList = () => {
               >
                 <Link to={`/product/${item._id}`}>
                   <img
-                    src={item?.images}
+                    src={item?.images[0]}
                     alt={item.name}
                     className="w-full h-64 object-cover"
                   />
