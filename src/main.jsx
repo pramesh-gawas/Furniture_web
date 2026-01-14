@@ -12,42 +12,26 @@ import { ProductDetail } from "./components/pages/ProductDetail.jsx";
 import { SignInLogIn } from "./components/SignInLogIn.jsx";
 import { Provider } from "react-redux";
 import Store from "./store/index.js";
+import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
+      { path: "/", element: <HomePage /> },
+      { path: "/shop", element: <Shop /> },
+      { path: "/signIn", element: <SignInLogIn /> },
+      { path: "/signUp", element: <SignInLogIn /> },
+      { path: "/product/:id", element: <ProductDetail /> },
+
+      // Protected Route
       {
-        path: "/",
-        element: <HomePage></HomePage>,
-      },
-      {
-        path: "/checkout",
-        element: <CheckOutPage />,
-      },
-      {
-        path: "/shop",
-        element: <Shop />,
-      },
-      {
-        path: "/wish-list",
-        element: <WishList />,
-      },
-      {
-        path: "/order-history",
-        element: <OrderHistory />,
-      },
-      {
-        path: "/signIn",
-        element: <SignInLogIn />,
-      },
-      {
-        path: "/signUp",
-        element: <SignInLogIn />,
-      },
-      {
-        path: "/product/:id",
-        element: <ProductDetail />,
+        element: <ProtectedRoute />,
+        children: [
+          { path: "/checkout", element: <CheckOutPage /> },
+          { path: "/wish-list", element: <WishList /> },
+          { path: "/order-history", element: <OrderHistory /> },
+        ],
       },
     ],
   },

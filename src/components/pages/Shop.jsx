@@ -1,16 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { formatPrice } from "../common/Format";
-import { Pagination } from "../common/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../../store/cartSlice";
 import { toggleWishList } from "../../store/wishlistSlice";
 import { Sidebar } from "../common/Sidebar";
+import { useFetch } from "../../utils/useFetch";
+import { setProducts, appendProducts } from "../../store/productSlice";
+import { useSearchParams } from "react-router-dom";
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export const Shop = () => {
   const { filteredItems, items } = useSelector((store) => store.product);
   const wishlist = useSelector((store) => store.wishlist);
   const dispatch = useDispatch();
   const Navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [searchParams] = useSearchParams();
+  const sort = searchParams.get("sort") || "";
+  const category = searchParams.get("category") || "all";
+  const { data, loading, error } = useFetch(
+    `${apiUrl}/shop/productlist?page=${page}&sort=${sort}&category=${category}`
+  );
+  useEffect(() => {
+    setPage(1);
+    setHasMore(true);
+  }, [sort, category]);
+
+  useEffect(() => {
+    if (data?.response) {
+      if (page === 1) {
+        dispatch(setProducts(data.response));
+      } else {
+        dispatch(appendProducts(data.response));
+      }
+      if (data.currentPage >= data.totalPages) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
+    }
+  }, [data, dispatch, page]);
+
   const handleAddToCart = (item) => {
     dispatch(addItem(item));
   };
@@ -26,17 +58,17 @@ export const Shop = () => {
   return (
     <div className="px-6 py-32 lg:px-2 bg-gray-900 flex">
       <Sidebar />
-      <div className="w-full lg:w-3/4">
-        <Pagination />
+      <div className="w-full lg:w-4/4">
         <div className="px-3 py-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
           {product?.map((item) => (
             <div
-              key={item.id}
+              key={item._id}
               className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition block"
             >
-              <Link to={`/product/${item.id}`}>
+              <Link to={`/product/${item._id}`}>
                 <img
-                  src={item.image}
+                  src={item.images[0]}
+                  loading="lazy"
                   alt={item.name}
                   className="w-full h-48 object-cover bg-gray-200"
                 />{" "}
@@ -52,14 +84,14 @@ export const Shop = () => {
                       onClick={() => handleAddToWishList(item)}
                       className={`h-8 w-8 bg-gray-300 hover:bg-gray-400 py-1 px-2 rounded-full font-medium transition ${
                         wishlist.items.some(
-                          (wishItem) => wishItem.id === item.id
+                          (wishItem) => wishItem._id === item._id
                         )
                           ? "text-red-500"
                           : "text-gray-900"
                       }`}
                     >
                       {wishlist.items.some(
-                        (wishItem) => wishItem.id === item.id
+                        (wishItem) => wishItem._id === item._id
                       )
                         ? "♥"
                         : "♡"}
@@ -89,8 +121,21 @@ export const Shop = () => {
               </div>
             </div>
           ))}
+          {hasMore && (
+            <button
+              onClick={() => {
+                if (page < data.totalPages) {
+                  setPage((prev) => prev + 1);
+                }
+              }}
+              disabled={loading || page >= data?.totalPages}
+              className="mt-8 px-6 py-2 bg-black text-white"
+            >
+              {loading ? "Loading..." : "Load More"}
+            </button>
+          )}
+          {error && <div>Error</div>}
         </div>
-        <Pagination />
       </div>
     </div>
   );

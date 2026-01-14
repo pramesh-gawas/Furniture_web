@@ -6,10 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../../store/cartSlice";
 export const ProductDetail = () => {
   const { items } = useSelector((store) => store.product);
+  console.log(items);
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const product = items.find((p) => p.id === parseInt(id));
+  const product = items.find((p) => p._id === id);
   if (!product) {
     return (
       <div className="px-6 py-32 lg:px-8 bg-gray-900 text-white">
@@ -36,8 +37,9 @@ export const ProductDetail = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <img
-              src={product.image}
+              src={product.images[0]}
               alt={product.name}
+              loading="lazy"
               className="w-full h-96 object-cover rounded-lg"
             />
           </div>
@@ -46,7 +48,7 @@ export const ProductDetail = () => {
             <p className="text-xl font-semibold text-blue-400 mb-4">
               {formatPrice(product.price)}
             </p>
-            <p className="text-gray-300 mb-6">{product.description}</p>
+            <p className="text-gray-300 mb-6">{product.category}</p>
             <div className="flex gap-4">
               <button
                 onClick={() => handleAddToCart(product)}

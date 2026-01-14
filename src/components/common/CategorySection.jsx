@@ -3,7 +3,13 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 export const CategorySection = () => {
   const { items } = useSelector((store) => store.product);
-
+  const uniqueByCategory = Object.values(
+    items.reduce((acc, current) => {
+      acc[current.category] = current;
+      return acc;
+    }, {})
+  );
+  uniqueByCategory.sort((a, b) => a.category.localeCompare(b.category));
   return (
     <section className="bg-white dark:bg-gray-900 py-12">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -12,15 +18,15 @@ export const CategorySection = () => {
         </h2>
 
         <div className="flex flex-row items-center justify-center gap-4 overflow-x-auto pb-4 scrollbar-hide">
-          {items.map((category) => (
+          {uniqueByCategory.map((category, index) => (
             <Link
-              key={category.name}
+              key={index}
               to={`/shop?category=${category.category}`}
               className="group flex flex-col items-center min-w-[120px] lg:min-w-[150px]"
             >
               <div className="relative h-24 w-24 sm:h-32 sm:w-32 overflow-hidden rounded-full border-2 border-gray-100 dark:border-gray-800 transition-all duration-300 group-hover:border-indigo-600 group-hover:shadow-lg">
                 <img
-                  src={category.image}
+                  src={category.images}
                   alt={category.name}
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />

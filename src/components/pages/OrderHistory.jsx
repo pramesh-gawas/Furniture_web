@@ -1,13 +1,15 @@
 import React from "react";
 import { formatPrice } from "../common/Format";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem, clearCart, removeItem } from "../../store/cartSlice";
+import { clearCart, removeItem, updateQuantity } from "../../store/cartSlice";
 import { useNavigate } from "react-router-dom";
 export const OrderHistory = () => {
   const { items } = useSelector((store) => store.cart);
+  console.log(items);
   const [selectedItem, setSelectedItem] = React.useState(
     items[items.length - 1]
   );
+  console.log(selectedItem);
   const Navigate = useNavigate();
   const dispatch = useDispatch();
   const subtotal = items.reduce(
@@ -20,8 +22,22 @@ export const OrderHistory = () => {
     dispatch(removeItem(id));
   };
 
-  const handleAddItem = (item) => {
-    dispatch(addItem(item));
+  const handleInc = (item) => {
+    const obj = {
+      id: item._id,
+      quantity: item.quantity + 1,
+    };
+    dispatch(updateQuantity(obj));
+  };
+
+  const handleDec = (item) => {
+    if (item.quantity > 1) {
+      const obj = {
+        id: item._id,
+        quantity: item.quantity - 1,
+      };
+      dispatch(updateQuantity(obj));
+    }
   };
 
   const handlePayment = () => {
@@ -66,9 +82,9 @@ export const OrderHistory = () => {
                   {items?.map((item) => (
                     <div
                       onClick={() => setSelectedItem(item)}
-                      key={item.id}
+                      key={item._id}
                       className={`p-3 rounded transition mb-2 d-flex flex justify-between items-center ${
-                        selectedItem.id === item.id
+                        selectedItem._id === item._id
                           ? "bg-blue-500 text-white"
                           : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
                       }`}
@@ -79,7 +95,7 @@ export const OrderHistory = () => {
                       </div>
                       <div className="flex space-x-3">
                         <button
-                          onClick={() => handleRemoveItem(item.id)}
+                          onClick={() => handleRemoveItem(item._id)}
                           className=" cursor-pointer w-8 h-8 text-white rounded-full bg-red-500 flex items-center justify-center"
                         >
                           <span>−</span>
@@ -90,7 +106,7 @@ export const OrderHistory = () => {
                         </div>
                         <div>
                           <button
-                            onClick={() => handleAddItem(item)}
+                            onClick={() => handleInc(item)}
                             className="mb-1 cursor-pointer w-6 h-6 text-white rounded-full bg-green-500 flex items-center justify-center "
                           >
                             +
@@ -99,7 +115,7 @@ export const OrderHistory = () => {
                             {item.quantity}
                           </p>
                           <button
-                            onClick={() => handleRemoveItem(item.id)}
+                            onClick={() => handleDec(item)}
                             className=" mt-1 cursor-pointer w-6 h-6 text-white rounded-full bg-red-500 flex items-center justify-center"
                           >
                             -
@@ -138,16 +154,13 @@ export const OrderHistory = () => {
                   Item Details
                 </h2>
                 <img
-                  src={selectedItem?.image}
+                  src={selectedItem?.images[0]}
                   alt={selectedItem?.name}
                   className="w-full h-64 object-cover rounded mb-4"
                 />
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                   {selectedItem?.name}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  {selectedItem?.title}
-                </p>
                 <p className="text-gray-600 dark:text-gray-400 mb-4">
                   {selectedItem?.description}
                 </p>
