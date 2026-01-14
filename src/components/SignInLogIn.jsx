@@ -26,11 +26,7 @@ export const SignInLogIn = () => {
     if (data?.token) {
       const token = data.token;
       const decodedUser = jwtDecode(token);
-      const userData = {
-        ...decodedUser,
-        token: token,
-      };
-      dispatch(setCredentials(userData));
+      dispatch(setCredentials({ user: decodedUser, token: token }));
       Navigate("/shop");
     }
   }, [data, Navigate]);

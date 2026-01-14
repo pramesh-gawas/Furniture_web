@@ -4,7 +4,10 @@ import { formatPrice } from "./common/Format";
 import { useDispatch } from "react-redux";
 import { addItem } from "../store/cartSlice";
 import { useSelector } from "react-redux";
-import { toggleWishList } from "../store/wishlistSlice";
+import {
+  addToWishlistServer,
+  removeFromWishlistServer,
+} from "../store/wishlistSlice";
 import { Link } from "react-router-dom";
 import { useFetch } from "../utils/useFetch";
 import { setProducts } from "../store/productSlice";
@@ -19,10 +22,11 @@ export const ProductList = () => {
   const { data, loading, error } = useFetch(`${apiUrl}/shop/productlist`);
 
   useEffect(() => {
-    if (data) {
+    if (data?.response) {
       dispatch(setProducts(data.response));
     }
   }, [data, dispatch]);
+
   const handleBuy = (item) => {
     Navigate(`/product/${item._id}`);
   };
@@ -30,8 +34,16 @@ export const ProductList = () => {
   const handleAddToCart = (item) => {
     dispatch(addItem(item));
   };
-  const handleAddToWishList = (item) => {
-    dispatch(toggleWishList(item));
+  const handleAddToWishList = (id) => {
+    const isItemInWishlist = wishlist?.items?.some(
+      (wishItem) => wishItem._id === id
+    );
+    console.log(isItemInWishlist);
+    if (isItemInWishlist) {
+      dispatch(removeFromWishlistServer(id));
+    } else {
+      dispatch(addToWishlistServer(id));
+    }
   };
 
   return (
@@ -61,16 +73,16 @@ export const ProductList = () => {
                     </h3>
                     <div className="relative group">
                       <button
-                        onClick={() => handleAddToWishList(item)}
+                        onClick={() => handleAddToWishList(item._id)}
                         className={`h-8 w-8 bg-gray-300 hover:bg-gray-400 py-1 px-2 rounded-full font-medium transition ${
-                          wishlist.items.some(
+                          wishlist?.items?.some(
                             (wishItem) => wishItem._id === item._id
                           )
                             ? "text-red-500"
                             : "text-gray-900"
                         }`}
                       >
-                        {wishlist.items.some(
+                        {wishlist?.items?.some(
                           (wishItem) => wishItem._id === item._id
                         )
                           ? "♥"
