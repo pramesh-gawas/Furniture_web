@@ -83,16 +83,12 @@ export const Shop = () => {
                     <button
                       onClick={() => handleAddToWishList(item)}
                       className={`h-8 w-8 bg-gray-300 hover:bg-gray-400 py-1 px-2 rounded-full font-medium transition ${
-                        wishlist.items.some(
-                          (wishItem) => wishItem._id === item._id
-                        )
+                        wishlist?.some((wishItem) => wishItem._id === item._id)
                           ? "text-red-500"
                           : "text-gray-900"
                       }`}
                     >
-                      {wishlist.items.some(
-                        (wishItem) => wishItem._id === item._id
-                      )
+                      {wishlist?.some((wishItem) => wishItem._id === item._id)
                         ? "♥"
                         : "♡"}
                     </button>
