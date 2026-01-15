@@ -10,7 +10,6 @@ import {
 import { useFetch } from "../../utils/useFetch";
 export const WishList = () => {
   const { items } = useSelector((store) => store.wishlist);
-  console.log(items);
   const dispatch = useDispatch();
   const apiUrl = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem("user");

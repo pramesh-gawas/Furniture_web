@@ -54,9 +54,13 @@ const wishlist = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(removeFromWishlistServer.fulfilled, (state, action) => {
-      state.items = action.payload;
+      state.items = action.payload || [];
       console.log(action.payload);
       state.wishlistCount = action.payload.length;
+    });
+    builder.addCase(addToWishlistServer.fulfilled, (state, action) => {
+      state.items = action.payload || [];
+      state.wishlistCount = (action.payload || []).length;
     });
   },
 });
