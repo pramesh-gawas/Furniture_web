@@ -3,7 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { formatPrice } from "../common/Format";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../../store/cartSlice";
-import { toggleWishList } from "../../store/wishlistSlice";
+import {
+  addToWishlistServer,
+  removeFromWishlistServer,
+} from "../../store/wishlistSlice";
 import { Sidebar } from "../common/Sidebar";
 import { useFetch } from "../../utils/useFetch";
 import { setProducts, appendProducts } from "../../store/productSlice";
@@ -12,7 +15,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 export const Shop = () => {
   const { filteredItems, items } = useSelector((store) => store.product);
-  const wishlist = useSelector((store) => store.wishlist);
+  const { items: wishlist } = useSelector((store) => store.wishlist);
   const dispatch = useDispatch();
   const Navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -50,8 +53,13 @@ export const Shop = () => {
     dispatch(addItem(item));
     Navigate(`/product/${item.id}`);
   };
-  const handleAddToWishList = (item) => {
-    dispatch(toggleWishList(item));
+  const handleAddToWishList = (id) => {
+    const isItemInWishlist = wishlist?.some((wishItem) => wishItem._id === id);
+    if (isItemInWishlist) {
+      dispatch(removeFromWishlistServer(id));
+    } else {
+      dispatch(addToWishlistServer(id));
+    }
   };
 
   const product = filteredItems.length > 0 ? filteredItems : items;
@@ -81,7 +89,7 @@ export const Shop = () => {
                   </h3>
                   <div className="relative group">
                     <button
-                      onClick={() => handleAddToWishList(item)}
+                      onClick={() => handleAddToWishList(item._id)}
                       className={`h-8 w-8 bg-gray-300 hover:bg-gray-400 py-1 px-2 rounded-full font-medium transition ${
                         wishlist?.some((wishItem) => wishItem._id === item._id)
                           ? "text-red-500"
