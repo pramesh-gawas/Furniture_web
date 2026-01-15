@@ -20,7 +20,6 @@ export const ProductList = () => {
   const { items } = useSelector((store) => store.product);
   const wishlist = useSelector((store) => store.wishlist);
   const { data, loading, error } = useFetch(`${apiUrl}/shop/productlist`);
-
   useEffect(() => {
     if (data?.response) {
       dispatch(setProducts(data.response));
