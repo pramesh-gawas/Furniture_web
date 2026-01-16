@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../../store/cartSlice";
 export const ProductDetail = () => {
   const { items } = useSelector((store) => store.product);
-  console.log(items);
+  const { user } = useSelector((state) => state.auth);
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -20,13 +20,25 @@ export const ProductDetail = () => {
   }
 
   const handleToggle = (item) => {
+    if (!user) {
+      navigate("/signin");
+      return;
+    }
     dispatch(toggleWishList(item));
   };
 
   const handleAddToCart = (item) => {
+    if (!user) {
+      navigate("/signin");
+      return;
+    }
     dispatch(addItem(item));
   };
   const handlePayment = (item) => {
+    if (!user) {
+      navigate("/signin");
+      return;
+    }
     dispatch(addItem(item));
     navigate("/checkout");
   };

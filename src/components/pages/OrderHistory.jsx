@@ -1,42 +1,70 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { formatPrice } from "../common/Format";
 import { useDispatch, useSelector } from "react-redux";
-import { clearCart, removeItem, updateQuantity } from "../../store/cartSlice";
+import {
+  clearCart,
+  updateQuantity,
+  updateQuantityServer,
+  removeFromCartServer,
+} from "../../store/cartSlice";
 import { useNavigate } from "react-router-dom";
 export const OrderHistory = () => {
-  const { items } = useSelector((store) => store.cart);
-  console.log(items);
-  const [selectedItem, setSelectedItem] = React.useState(
-    items[items.length - 1]
-  );
-  console.log(selectedItem);
+  const { items, loading, error } = useSelector((store) => store.cart);
+  const [selectedItem, setSelectedItem] = useState(null);
   const Navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (items?.length > 0) {
+      if (!selectedItem) {
+        setSelectedItem(items[items.length - 1]?.product);
+      } else {
+        const match = items.find((i) => i.product?._id === selectedItem?._id);
+        if (match) setSelectedItem(match.product);
+        else {
+          setSelectedItem(items[0]?.product);
+        }
+      }
+    } else {
+      setSelectedItem(null);
+    }
+  }, [items]);
+
   const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
   const tax = subtotal * 0.1;
   const total = subtotal + tax;
-  const handleRemoveItem = (id) => {
-    dispatch(removeItem(id));
-  };
+
+  if (loading && items.length === 0)
+    return <div className="py-32 text-center">Loading Cart...</div>;
+
+  // const subtotal = items.reduce(
+  //   (sum, item) => sum + item.price * item.quantity,
+  //   0
+  // );
+  // const tax = subtotal * 0.1;
+  // const total = subtotal + tax;
+  // const handleRemoveItem = (id) => {
+  //   dispatch(removeItem(id));
+  // };
 
   const handleInc = (item) => {
     const obj = {
-      id: item._id,
+      productId: item?.product?._id,
       quantity: item.quantity + 1,
     };
-    dispatch(updateQuantity(obj));
+    dispatch(updateQuantityServer(obj));
   };
 
   const handleDec = (item) => {
     if (item.quantity > 1) {
       const obj = {
-        id: item._id,
+        productId: item?.product?._id,
         quantity: item.quantity - 1,
       };
-      dispatch(updateQuantity(obj));
+      dispatch(updateQuantityServer(obj));
     }
   };
 
@@ -49,7 +77,7 @@ export const OrderHistory = () => {
         <h1 className="text-4xl font-bold text-gray-900 mb-8 dark:text-white">
           My Cart
         </h1>
-        {items.length === 0 ? (
+        {items?.length === 0 ? (
           <>
             {" "}
             <h2 className="text-2xl font-semibold text-gray-600 dark:text-gray-400 mb-4">
@@ -68,7 +96,7 @@ export const OrderHistory = () => {
                     Items in Bag
                   </h2>
                   <button
-                    onClick={() => dispatch(clearCart())}
+                    // onClick={() => dispatch(clearCart())}
                     className="bg-blue-500 p-2 rounded-lg text-2xl font-semibold text-gray-900 dark:text-white mb-4"
                   >
                     Clear Cart
@@ -79,23 +107,29 @@ export const OrderHistory = () => {
                     items.length > 6 ? "max-h-96 overflow-y-auto" : ""
                   }`}
                 >
-                  {items?.map((item) => (
+                  {items?.map((item, index) => (
                     <div
-                      onClick={() => setSelectedItem(item)}
-                      key={item._id}
+                      onClick={() => setSelectedItem(item?.product)}
+                      key={index}
                       className={`p-3 rounded transition mb-2 d-flex flex justify-between items-center ${
-                        selectedItem._id === item._id
+                        selectedItem?._id === item?.product?._id
                           ? "bg-blue-500 text-white"
                           : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
                       }`}
                     >
                       <div>
-                        <div className="font-semibold">{item.name}</div>
-                        <div className="text-sm">{formatPrice(item.price)}</div>
+                        <div className="font-semibold">
+                          {item?.product?.name}
+                        </div>
+                        <div className="text-sm">
+                          {formatPrice(item?.product?.price)}
+                        </div>
                       </div>
                       <div className="flex space-x-3">
                         <button
-                          onClick={() => handleRemoveItem(item._id)}
+                          onClick={() =>
+                            dispatch(removeFromCartServer(item?.product?._id))
+                          }
                           className=" cursor-pointer w-8 h-8 text-white rounded-full bg-red-500 flex items-center justify-center"
                         >
                           <span>−</span>
@@ -150,23 +184,37 @@ export const OrderHistory = () => {
             {/* Item Details */}
             <div className="lg:col-span-2">
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-                  Item Details
-                </h2>
-                <img
-                  src={selectedItem?.images[0]}
-                  alt={selectedItem?.name}
-                  className="w-full h-64 object-cover rounded mb-4"
-                />
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                  {selectedItem?.name}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  {selectedItem?.description}
-                </p>
-                <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                  {formatPrice(selectedItem?.price)}
-                </p>
+                {selectedItem ? (
+                  <>
+                    <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+                      Item Details
+                    </h2>
+                    {selectedItem.images && selectedItem.images.length > 0 ? (
+                      <img
+                        src={selectedItem.images[0]}
+                        alt={selectedItem.name}
+                        className="w-full h-64 object-cover rounded mb-4"
+                      />
+                    ) : (
+                      <div className="w-full h-64 bg-gray-200 flex items-center justify-center rounded mb-4">
+                        No Image Available
+                      </div>
+                    )}
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                      {selectedItem.name}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                      {selectedItem.description}
+                    </p>
+                    <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                      {formatPrice(selectedItem.price)}
+                    </p>
+                  </>
+                ) : (
+                  <div className="h-full flex items-center justify-center text-gray-500">
+                    Select an item to see details
+                  </div>
+                )}
               </div>
             </div>
           </div>

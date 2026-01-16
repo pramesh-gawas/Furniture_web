@@ -20,6 +20,7 @@ export const Shop = () => {
   const Navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const { user } = useSelector((state) => state.auth);
   const [searchParams] = useSearchParams();
   const sort = searchParams.get("sort") || "";
   const category = searchParams.get("category") || "all";
@@ -47,13 +48,23 @@ export const Shop = () => {
   }, [data, dispatch, page]);
 
   const handleAddToCart = (item) => {
+    if (!user) {
+      Navigate("/signin");
+      return;
+    }
     dispatch(addItem(item));
   };
   const handleBuy = (item) => {
-    dispatch(addItem(item));
-    Navigate(`/product/${item.id}`);
+    if (user) {
+      dispatch(addItem(item));
+    }
+    Navigate(`/product/${item._id}`);
   };
   const handleAddToWishList = (id) => {
+    if (!user) {
+      Navigate("/signin");
+      return;
+    }
     const isItemInWishlist = wishlist?.some((wishItem) => wishItem._id === id);
     if (isItemInWishlist) {
       dispatch(removeFromWishlistServer(id));

@@ -2,34 +2,17 @@ import React, { useEffect } from "react";
 import { formatPrice } from "../common/Format";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { addItem } from "../../store/cartSlice";
-import {
-  removeFromWishlistServer,
-  toggleWishList,
-} from "../../store/wishlistSlice";
-import { useFetch } from "../../utils/useFetch";
+import { addToCartServer } from "../../store/cartSlice";
+import { removeFromWishlistServer } from "../../store/wishlistSlice";
 export const WishList = () => {
-  const { items } = useSelector((store) => store.wishlist);
+  const { items, loading, error } = useSelector((store) => store.wishlist);
   const dispatch = useDispatch();
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const token = localStorage.getItem("user");
-  const { data, loading, error } = useFetch(
-    `${apiUrl}/shop/wishlist`,
-    "GET",
-    null,
-    token
-  );
-  useEffect(() => {
-    if (data?.response?.products) {
-      dispatch(toggleWishList(data.response.products));
-    }
-  }, [data, dispatch]);
   const removeFromWishlist = (id) => {
     dispatch(removeFromWishlistServer(id));
   };
 
   const addToCart = (item) => {
-    dispatch(addItem(item));
+    dispatch(addToCartServer(item));
   };
 
   return (

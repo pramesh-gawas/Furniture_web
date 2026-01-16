@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatPrice } from "./common/Format";
 import { useDispatch } from "react-redux";
-import { addItem } from "../store/cartSlice";
+import { addToCartServer } from "../store/cartSlice";
 import { useSelector } from "react-redux";
 import {
   addToWishlistServer,
@@ -19,6 +19,7 @@ export const ProductList = () => {
   const dispatch = useDispatch();
   const { items } = useSelector((store) => store.product);
   const wishlist = useSelector((store) => store.wishlist.items);
+  const { user } = useSelector((state) => state.auth);
   const { data, loading, error } = useFetch(`${apiUrl}/shop/productlist`);
   useEffect(() => {
     if (data?.response) {
@@ -27,15 +28,25 @@ export const ProductList = () => {
   }, [data, dispatch]);
 
   const handleBuy = (item) => {
+    if (user) {
+      dispatch(addItem(item));
+    }
     Navigate(`/product/${item._id}`);
   };
 
-  const handleAddToCart = (item) => {
-    dispatch(addItem(item));
+  const handleAddToCart = (productId) => {
+    if (!user) {
+      Navigate("/signin");
+      return;
+    }
+    dispatch(addToCartServer(productId));
   };
   const handleAddToWishList = (id) => {
+    if (!user) {
+      Navigate("/signin");
+      return;
+    }
     const isItemInWishlist = wishlist?.some((wishItem) => wishItem._id === id);
-    console.log(isItemInWishlist);
     if (isItemInWishlist) {
       dispatch(removeFromWishlistServer(id));
     } else {
@@ -99,7 +110,7 @@ export const ProductList = () => {
                       Buy
                     </button>
                     <button
-                      onClick={() => handleAddToCart(item)}
+                      onClick={() => handleAddToCart(item._id)}
                       className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-medium transition text-sm"
                     >
                       Add to Cart
