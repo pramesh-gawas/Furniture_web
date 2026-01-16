@@ -2,21 +2,19 @@ import "./App.css";
 import { Outlet } from "react-router-dom";
 import { Header } from "./components/common/Header";
 import { Footer } from "./components/common/Footer";
-import { useDispatch } from "react-redux";
-import { useFetch } from "./utils/useFetch";
-import { toggleWishList } from "./store/wishlistSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getWishlistServer } from "./store/wishlistSlice";
 import { useEffect } from "react";
+import { getCartServer } from "./store/cartSlice";
 function App() {
   const dispatch = useDispatch();
-  const token = localStorage.getItem("user");
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const { data } = useFetch(`${apiUrl}/shop/wishlist`, "GET", null, token);
-
+  const { user } = useSelector((state) => state.auth);
   useEffect(() => {
-    if (data?.response?.products) {
-      dispatch(toggleWishList(data.response.products));
+    if (user) {
+      dispatch(getCartServer());
+      dispatch(getWishlistServer());
     }
-  }, [data, dispatch]);
+  }, [dispatch, user]);
   return (
     <>
       <div className=" main d-flex flex-col">
