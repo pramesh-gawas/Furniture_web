@@ -1,5 +1,95 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { formatPrice } from "./Format";
+import { addToCartServer } from "../../store/cartSlice";
+import {
+  addToWishlistServer,
+  removeFromWishlistServer,
+} from "../../store/wishlistSlice";
 
-export const Card = () => {
-  return <div>Card</div>;
+export const Card = ({ item }) => {
+  const Navigate = useNavigate();
+  const dispatch = useDispatch();
+  const wishlist = useSelector((store) => store.wishlist.items);
+  const { user } = useSelector((state) => state.auth);
+  const handleBuy = (item) => {
+    if (user) {
+      dispatch(addToCartServer(item));
+    }
+    Navigate(`/product/${item._id}`);
+  };
+
+  const handleAddToCart = (productId) => {
+    if (!user) {
+      Navigate("/signin");
+      return;
+    }
+    dispatch(addToCartServer(productId));
+  };
+  const handleAddToWishList = (id) => {
+    if (!user) {
+      Navigate("/signin");
+      return;
+    }
+    const isItemInWishlist = wishlist?.some((wishItem) => wishItem._id === id);
+    if (isItemInWishlist) {
+      dispatch(removeFromWishlistServer(id));
+    } else {
+      dispatch(addToWishlistServer(id));
+    }
+  };
+  return (
+    <div
+      key={item._id}
+      className="bg-gray-800 rounded-lg overflow-hidden hover:shadow-lg transition block "
+    >
+      <Link to={`/product/${item._id}`}>
+        <img
+          src={item?.images[0]}
+          alt={item.name}
+          className="w-full h-64 object-cover"
+        />
+      </Link>
+      <div className="p-4">
+        <div className="flex justify-between items-center mb-2">
+          <h3 className="text-lg font-semibold text-white">{item.name}</h3>
+          <div className="relative group">
+            <button
+              onClick={() => handleAddToWishList(item._id)}
+              className={`h-8 w-8 bg-gray-300 hover:bg-gray-400 py-1 px-2 rounded-full font-medium transition ${
+                wishlist?.some((wishItem) => wishItem._id === item._id)
+                  ? "text-red-500"
+                  : "text-gray-900"
+              }`}
+            >
+              {wishlist?.some((wishItem) => wishItem._id === item._id)
+                ? "♥"
+                : "♡"}
+            </button>
+            <span className="absolute bottom-full left-1/15 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-sm rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition">
+              Add to wishlist
+            </span>
+          </div>
+        </div>
+        <p className="text-xl font-bold text-indigo-400">
+          {formatPrice(item.price)}
+        </p>
+        <div className="flex gap-1 mt-4">
+          <button
+            onClick={() => handleBuy(item)}
+            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium transition text-sm"
+          >
+            Buy
+          </button>
+          <button
+            onClick={() => handleAddToCart(item._id)}
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-medium transition text-sm"
+          >
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
