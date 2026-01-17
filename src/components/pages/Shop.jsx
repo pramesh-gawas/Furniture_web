@@ -5,6 +5,7 @@ import { useFetch } from "../../utils/useFetch";
 import { setProducts, appendProducts } from "../../store/productSlice";
 import { useSearchParams } from "react-router-dom";
 import { Card } from "../common/Card";
+import Toaster from "../common/Toaster";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export const Shop = () => {
@@ -18,6 +19,37 @@ export const Shop = () => {
   const { data, loading, error } = useFetch(
     `${apiUrl}/shop/productlist?page=${page}&sort=${sort}&category=${category}`
   );
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
+
+  useEffect(() => {
+    if (toast.show) {
+      const timer = setTimeout(() => {
+        setToast((prev) => ({ ...prev, show: false }));
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [toast.show]);
+
+  useEffect(() => {
+    if (error) {
+      const msg =
+        typeof error === "string"
+          ? error
+          : error.message || "Something went wrong";
+      setToast({ show: true, message: msg, type: "danger" });
+      const timer = setTimeout(() => {
+        setToast((prev) => ({ ...prev, show: false }));
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   useEffect(() => {
     setPage(1);
     setHasMore(true);
@@ -44,13 +76,13 @@ export const Shop = () => {
       <Sidebar />
       <div className="w-full lg:w-4/4">
         <div className="px-3 py-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
-          {product?.map((item) => (
-            <Card item={item} />
+          {product?.map((item, index) => (
+            <Card item={item} key={index} setToast={setToast} />
           ))}
           {hasMore && (
             <button
               onClick={() => {
-                if (page < data.totalPages) {
+                if (page < data?.totalPages) {
                   setPage((prev) => prev + 1);
                 }
               }}
@@ -60,7 +92,14 @@ export const Shop = () => {
               {loading ? "Loading..." : "Load More"}
             </button>
           )}
-          {error && <div>Error</div>}
+          {
+            <Toaster
+              visible={toast.show}
+              message={toast.message}
+              type={toast.type}
+              onClose={() => setToast({ ...toast, show: false })}
+            />
+          }
         </div>
       </div>
     </div>

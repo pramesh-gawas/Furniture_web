@@ -1,12 +1,35 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { formatPrice } from "../common/Format";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { addToCartServer } from "../../store/cartSlice";
 import { removeFromWishlistServer } from "../../store/wishlistSlice";
+import Toaster from "../common/Toaster";
 export const WishList = () => {
   const { items, loading, error } = useSelector((store) => store.wishlist);
   const dispatch = useDispatch();
+
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
+
+  useEffect(() => {
+    if (error) {
+      const msg =
+        typeof error === "string"
+          ? error
+          : error.message || "Something went wrong";
+      setToast({ show: true, message: msg, type: "danger" });
+      const timer = setTimeout(() => {
+        setToast((prev) => ({ ...prev, show: false }));
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   const removeFromWishlist = (id) => {
     dispatch(removeFromWishlistServer(id));
   };
@@ -76,7 +99,14 @@ export const WishList = () => {
             )}
           </div>
         )}
-        {error && <div className="text-red-500 mt-4">Error: {error}</div>}
+        {
+          <Toaster
+            visible={toast.show}
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast({ ...toast, show: false })}
+          />
+        }
       </div>
     </div>
   );
