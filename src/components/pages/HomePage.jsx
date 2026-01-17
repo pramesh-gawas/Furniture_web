@@ -6,9 +6,10 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { CategorySection } from "../common/CategorySection";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Spinner } from "../common/Spinner";
 export const HomePage = () => {
   const [current, setCurrent] = useState(0);
-  const { items } = useSelector((store) => store.product);
+  const { items, loadingStatus } = useSelector((store) => store.product);
   const slides = items ? items.slice(0, 3) : [];
   const nextSlide = () =>
     setCurrent(current === slides.length - 1 ? 0 : current + 1);
@@ -29,28 +30,32 @@ export const HomePage = () => {
           className="flex h-full transition-transform duration-700 ease-out"
           style={{ transform: `translateX(-${current * 100}%)` }}
         >
-          {slides?.map((slide) => (
-            <div key={slide._id} className="relative min-w-full h-full">
-              <img
-                src={slide.images[0]}
-                alt={slide.name}
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover opacity-70"
-              />
-              <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center text-white">
-                <h1 className="text-5xl font-bold tracking-tight sm:text-7xl">
-                  {slide.name}
-                </h1>
-                <p className="mt-6 text-lg max-w-xl">{slide.description}</p>
-                <Link
-                  to={"/shop"}
-                  className="mt-10 rounded-full bg-white px-8 py-3 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 transition-all"
-                >
-                  {slide.cta || "buy now "}
-                </Link>
+          {loadingStatus ? (
+            <Spinner />
+          ) : (
+            slides?.map((slide) => (
+              <div key={slide._id} className="relative min-w-full h-full">
+                <img
+                  src={slide.images[0]}
+                  alt={slide.name}
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover opacity-70"
+                />
+                <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center text-white">
+                  <h1 className="text-5xl font-bold tracking-tight sm:text-7xl">
+                    {slide.name}
+                  </h1>
+                  <p className="mt-6 text-lg max-w-xl">{slide.description}</p>
+                  <Link
+                    to={"/shop"}
+                    className="mt-10 rounded-full bg-white px-8 py-3 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 transition-all"
+                  >
+                    {slide.cta || "buy now "}
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
         <button
           onClick={prevSlide}

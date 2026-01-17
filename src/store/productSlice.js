@@ -1,4 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
+export const getProductsServer = createAsyncThunk(
+  "product/getProductsServer",
+  async (params = {}, { rejectWithValue }) => {
+    try {
+      const { page = 1, sort = "", category = "all" } = params;
+      const url = new URL(`${apiUrl}/shop/productlist`);
+      url.searchParams.append("page", page);
+      if (sort) url.searchParams.append("sort", sort);
+      if (category) url.searchParams.append("category", category);
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to fetch products");
+      }
+
+      const data = await response.json();
+      return data.response;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
 
 const product = createSlice({
   name: "product",
@@ -30,22 +56,21 @@ const product = createSlice({
         );
       }
     },
-    sortByPrice: (state, action) => {
-      const order = action.payload; // 'asc' or 'desc'
-      state.filteredItems = [...state.filteredItems].sort((a, b) => {
-        if (order === "asc") {
-          return a.price - b.price;
-        } else {
-          return b.price - a.price;
-        }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getProductsServer.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getProductsServer.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload;
+      })
+      .addCase(getProductsServer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
-    },
-    setLoading: (state, action) => {
-      state.loadingStatus = action.payload;
-    },
-    setError: (state, action) => {
-      state.error = action.payload;
-    },
   },
 });
 

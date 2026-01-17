@@ -2,17 +2,38 @@ import React, { useEffect, useState } from "react";
 import { formatPrice } from "../common/Format";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  clearCart,
-  updateQuantity,
   updateQuantityServer,
   removeFromCartServer,
 } from "../../store/cartSlice";
 import { useNavigate } from "react-router-dom";
+import Toaster from "../common/Toaster";
+import { Spinner } from "../common/Spinner";
 export const OrderHistory = () => {
   const { items, loading, error } = useSelector((store) => store.cart);
   const [selectedItem, setSelectedItem] = useState(null);
   const Navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
+
+  useEffect(() => {
+    if (error) {
+      const msg =
+        typeof error === "string"
+          ? error
+          : error.message || "Something went wrong";
+      setToast({ show: true, message: msg, type: "danger" });
+      const timer = setTimeout(() => {
+        setToast((prev) => ({ ...prev, show: false }));
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
   useEffect(() => {
     if (items?.length > 0) {
@@ -37,9 +58,7 @@ export const OrderHistory = () => {
   const tax = subtotal * 0.1;
   const total = subtotal + tax;
 
-  if (loading && items.length === 0)
-    return <div className="py-32 text-center">Loading Cart...</div>;
-
+  if (loading && items.length === 0) return <Spinner />;
   // const subtotal = items.reduce(
   //   (sum, item) => sum + item.price * item.quantity,
   //   0
@@ -219,6 +238,14 @@ export const OrderHistory = () => {
             </div>
           </div>
         )}
+        {
+          <Toaster
+            visible={toast.show}
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast({ ...toast, show: false })}
+          />
+        }
       </div>
     </div>
   );

@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
-import ClipLoader from "react-spinners/ClipLoader";
-
-export const Spinner = ({ data }) => {
-  const [spinner, setSpinner] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setSpinner(false);
-    }, 4000);
-  }, [data]);
-  return spinner && <ClipLoader></ClipLoader>;
+export const Spinner = () => {
+  return (
+    <div className="flex justify-between  gap-4">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+  );
 };

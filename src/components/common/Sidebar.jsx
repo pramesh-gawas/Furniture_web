@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import {
-  filterByCategory,
-  setProducts,
-  sortByPrice,
-} from "../../store/productSlice";
+import { filterByCategory, setProducts } from "../../store/productSlice";
 import { useFetch } from "../../utils/useFetch";
-import { Spinner } from "./Spinner";
+import { Spinner } from "./../common/Spinner";
 
 export const Sidebar = () => {
   const [searchParams, setSearchParams] = useSearchParams();

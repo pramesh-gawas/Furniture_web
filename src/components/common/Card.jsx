@@ -8,7 +8,7 @@ import {
   removeFromWishlistServer,
 } from "../../store/wishlistSlice";
 
-export const Card = ({ item }) => {
+export const Card = ({ item, setToast }) => {
   const Navigate = useNavigate();
   const dispatch = useDispatch();
   const wishlist = useSelector((store) => store.wishlist.items);
@@ -20,12 +20,17 @@ export const Card = ({ item }) => {
     Navigate(`/product/${item._id}`);
   };
 
-  const handleAddToCart = (productId) => {
+  const handleAddToCart = (item) => {
     if (!user) {
       Navigate("/signin");
       return;
     }
-    dispatch(addToCartServer(productId));
+    setToast({
+      show: true,
+      message: `${item.name} added to cart`,
+      type: "success",
+    });
+    dispatch(addToCartServer(item._id));
   };
   const handleAddToWishList = (id) => {
     if (!user) {
@@ -83,7 +88,7 @@ export const Card = ({ item }) => {
             Buy
           </button>
           <button
-            onClick={() => handleAddToCart(item._id)}
+            onClick={() => handleAddToCart(item)}
             className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-medium transition text-sm"
           >
             Add to Cart

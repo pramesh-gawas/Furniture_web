@@ -6,10 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getWishlistServer } from "./store/wishlistSlice";
 import { useEffect } from "react";
 import { getCartServer } from "./store/cartSlice";
+import { getProductsServer } from "./store/productSlice";
 function App() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   useEffect(() => {
+    dispatch(getProductsServer());
     if (user) {
       dispatch(getCartServer());
       dispatch(getWishlistServer());
