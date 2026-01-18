@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { Spinner } from "../common/Spinner";
 export const HomePage = () => {
   const [current, setCurrent] = useState(0);
-  const { items, loadingStatus } = useSelector((store) => store.product);
+  const { items, loading } = useSelector((store) => store.product);
   const slides = items ? items.slice(0, 3) : [];
   const nextSlide = () =>
     setCurrent(current === slides.length - 1 ? 0 : current + 1);
@@ -30,7 +30,7 @@ export const HomePage = () => {
           className="flex h-full transition-transform duration-700 ease-out"
           style={{ transform: `translateX(-${current * 100}%)` }}
         >
-          {loadingStatus ? (
+          {loading ? (
             <Spinner />
           ) : (
             slides?.map((slide) => (
