@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/userSlice";
 
 export const Header = () => {
-  const { user } = useSelector((state) => state.auth.user);
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigation = [
     { name: "Home", href: "/" },
