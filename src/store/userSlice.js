@@ -12,7 +12,8 @@ const userData = createSlice({
   reducers: {
     setCredentials: (state, action) => {
       const { user, token } = action.payload;
-      state.user = user;
+      const cleanUser = user?.user ? user.user : user;
+      state.user = cleanUser;
       state.token = token;
       localStorage.setItem("user", token);
     },
