@@ -31,7 +31,7 @@ const product = createSlice({
   initialState: {
     items: [],
     filteredItems: [],
-    loadingStatus: false,
+    loading: false,
     error: null,
   },
   reducers: {

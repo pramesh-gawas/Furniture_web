@@ -5,19 +5,19 @@ import { addToWishlistServer } from "../../store/wishlistSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCartServer } from "../../store/cartSlice";
 import Toaster from "../common/Toaster";
+import { Spinner } from "../common/Spinner";
 export const ProductDetail = () => {
   const [toast, setToast] = useState({
     show: false,
     message: "",
     type: "success",
   });
-  const { items, error } = useSelector((store) => store.product);
+  const { items, error, loading } = useSelector((store) => store.product);
   const { user } = useSelector((state) => state.auth);
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const product = items.find((p) => p._id === id);
-
   useEffect(() => {
     if (error) {
       const msg =
@@ -37,11 +37,15 @@ export const ProductDetail = () => {
     if (toast.show) {
       const timer = setTimeout(
         () => setToast((prev) => ({ ...prev, show: false })),
-        3000
+        3000,
       );
       return () => clearTimeout(timer);
     }
   }, [toast.show]);
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   if (!product) {
     return (

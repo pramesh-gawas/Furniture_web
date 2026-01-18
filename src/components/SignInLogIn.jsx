@@ -5,6 +5,7 @@ import { useFetch } from "../utils/useFetch";
 import { useDispatch } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import { setCredentials } from "../store/userSlice";
+import Toaster from "./common/Toaster";
 export const SignInLogIn = () => {
   const [register, setRegister] = useState(false);
   const Navigate = useNavigate();
@@ -14,6 +15,26 @@ export const SignInLogIn = () => {
   const [triggerUrl, setTriggerUrl] = useState(null);
   const location = useLocation();
   const { data, loading, error } = useFetch(triggerUrl, "POST", formData);
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
+  useEffect(() => {
+    if (error) {
+      const msg =
+        typeof error === "string"
+          ? error
+          : error.message || "Something went wrong";
+      setToast({ show: true, message: msg, type: "danger" });
+      const timer = setTimeout(() => {
+        setToast((prev) => ({ ...prev, show: false }));
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formdata = new FormData(e.currentTarget);
@@ -157,6 +178,14 @@ export const SignInLogIn = () => {
               {register ? "signIn" : "signUp"}
             </button>
           </p>
+          {
+            <Toaster
+              visible={toast.show}
+              message={toast.message}
+              type={toast.type}
+              onClose={() => setToast({ ...toast, show: false })}
+            />
+          }
         </div>
       </div>
     </>
