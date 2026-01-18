@@ -80,7 +80,29 @@ export const SignInLogIn = () => {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={(e) => handleSubmit(e)} className="space-y-6">
-            <div>
+            <div className="m-auto ">
+              {register && (
+                <>
+                  <div className="flex items-center justify-between">
+                    <label
+                      htmlFor="username"
+                      className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100"
+                    >
+                      Username
+                    </label>
+                  </div>
+                  <div className="mt-2">
+                    <input
+                      id="username"
+                      name="username"
+                      type="username"
+                      required
+                      autoComplete="username"
+                      className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+                    />
+                  </div>
+                </>
+              )}
               <label
                 htmlFor="email"
                 className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100"
@@ -127,32 +149,6 @@ export const SignInLogIn = () => {
                 />
               </div>
             </div>
-            {register && (
-              <div>
-                <label
-                  htmlFor="role"
-                  className="block text-sm font-medium text-gray-900 light:text-white"
-                >
-                  Select Role
-                </label>
-                <select
-                  id="role"
-                  name="role"
-                  className="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:focus:outline-indigo-500"
-                >
-                  <option value="" disabled>
-                    Choose a role
-                  </option>
-                  <option value="user" className="text-gray-900">
-                    User
-                  </option>
-                  <option value="admin" className="text-gray-900">
-                    Admin
-                  </option>
-                </select>
-              </div>
-            )}
-
             <div>
               <button
                 type="submit"

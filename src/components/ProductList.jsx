@@ -5,7 +5,7 @@ import { Card } from "./common/Card";
 import Toaster from "./common/Toaster";
 
 export const ProductList = () => {
-  const { items, loadingStatus, error } = useSelector((store) => store.product);
+  const { items, loading, error } = useSelector((store) => store.product);
   const [toast, setToast] = useState({
     show: false,
     message: "",
@@ -49,7 +49,7 @@ export const ProductList = () => {
             onClose={() => setToast({ ...toast, show: false })}
           />
         }
-        {loadingStatus ? (
+        {loading ? (
           <Spinner />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

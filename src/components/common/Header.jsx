@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/userSlice";
 
 export const Header = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigation = [
     { name: "Home", href: "/" },
@@ -113,12 +113,23 @@ export const Header = () => {
               Sign in <span aria-hidden="true">&rarr;</span>
             </Link>
           ) : (
-            <button
-              onClick={() => dispatch(logout())}
-              className="-m-2.5 inline-flex items-center justify-center  p-2.5 text-red-500 font-bold"
-            >
-              LogOut
-            </button>
+            <div className="flex items-center gap-x-4">
+              <div className="flex items-center gap-x-2 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800">
+                <div className="size-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold uppercase">
+                  {user.username?.charAt(0) || "U"}
+                </div>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                  {user.username || "User"}
+                </span>
+              </div>
+
+              <button
+                onClick={() => dispatch(logout())}
+                className="text-sm font-bold text-red-500 hover:text-red-600 transition"
+              >
+                Log Out
+              </button>
+            </div>
           )}
         </div>
       </nav>
@@ -187,12 +198,23 @@ export const Header = () => {
                     </a>
                   </>
                 ) : (
-                  <button
-                    onClick={() => dispatch(logout())}
-                    className="-m-2.5 inline-flex items-center justify-center  p-2.5 text-red-500 font-bold"
-                  >
-                    LogOut
-                  </button>
+                  <div className="flex items-center gap-x-4">
+                    <div className="flex items-center gap-x-2 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800">
+                      <div className="size-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold uppercase">
+                        {user.username?.charAt(0) || "U"}
+                      </div>
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                        {user.username || "User"}
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={() => dispatch(logout())}
+                      className="text-sm font-bold text-red-500 hover:text-red-600 transition"
+                    >
+                      Log Out
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
