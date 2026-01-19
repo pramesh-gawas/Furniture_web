@@ -13,6 +13,7 @@ import { SignInLogIn } from "./components/SignInLogIn.jsx";
 import { Provider } from "react-redux";
 import Store from "./store/index.js";
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
+import { OrderSuccess } from "./components/pages/OrderSuccess.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
           { path: "/checkout", element: <CheckOutPage /> },
           { path: "/wish-list", element: <WishList /> },
           { path: "/order-history", element: <OrderHistory /> },
+          { path: "/order-success/:orderId", element: <OrderSuccess /> },
         ],
       },
     ],
@@ -42,5 +44,5 @@ createRoot(document.getElementById("root")).render(
     <Provider store={Store}>
       <RouterProvider router={router}> </RouterProvider>
     </Provider>
-  </StrictMode>
+  </StrictMode>,
 );

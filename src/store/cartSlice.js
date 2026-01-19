@@ -1,5 +1,31 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+export const clearCartServer = createAsyncThunk(
+  "cart/clearCart",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("user");
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/shop/cart/clearCart`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+
+      return data.response;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  },
+);
+
 export const getCartServer = createAsyncThunk(
   "cart/get",
   async (_, { rejectWithValue }) => {
@@ -100,8 +126,19 @@ export const removeFromCartServer = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.message);
     }
-  }
+  },
 );
+
+const calculateTotals = (state) => {
+  state.totalQuantity = state.items.reduce(
+    (acc, item) => acc + item.quantity,
+    0,
+  );
+  state.totalAmount = state.items.reduce((acc, item) => {
+    const price = item.price || item.product?.price || 0;
+    return acc + price * item.quantity;
+  }, 0);
+};
 
 const cart = createSlice({
   name: "cart",
@@ -112,73 +149,36 @@ const cart = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {
-    addItem: (state, action) => {
-      const newItem = action.payload;
-      const existingItem = state.items.find((item) => item._id === newItem._id);
-      if (existingItem) {
-        existingItem.quantity++;
-        existingItem.totalPrice += newItem.price;
-      } else {
-        state.items.push({
-          _id: newItem._id,
-          name: newItem.name,
-          price: Number(newItem.price),
-          quantity: 1,
-          totalPrice: Number(newItem.price),
-          images: newItem.images,
-          description: newItem.description,
-        });
-      }
-      state.totalQuantity++;
-      state.totalAmount += newItem.price;
-    },
-  },
   extraReducers: (builder) => {
     builder
       .addCase(addToCartServer.fulfilled, (state, action) => {
         const incomingItems = Array.isArray(action.payload)
           ? action.payload
           : action.payload?.items || [];
-
         state.items = incomingItems;
-        state.totalQuantity = incomingItems.reduce(
-          (total, item) => total + item.quantity,
-          0
-        );
-        state.totalAmount = incomingItems.reduce((total, item) => {
-          const price = item.product?.price || 0;
-          return total + price * item.quantity;
-        }, 0);
-
+        calculateTotals(state);
         state.loading = false;
       })
       .addCase(getCartServer.fulfilled, (state, action) => {
         state.items = action.payload;
-        state.totalQuantity = state.items.reduce(
-          (acc, item) => acc + item.quantity,
-          0
-        );
-        state.totalAmount = state.items.reduce(
-          (acc, item) => acc + item.price * item.quantity,
-          0
-        );
+        calculateTotals(state);
         state.loading = false;
       });
     builder
       .addCase(updateQuantityServer.fulfilled, (state, action) => {
         state.items = action.payload;
-        state.totalQuantity = state.items.reduce(
-          (total, item) => total + item.quantity,
-          0
-        );
-        state.totalAmount = state.items.reduce((total, item) => {
-          const price = item.product?.price || 0;
-          return total + price * item.quantity;
-        }, 0);
+        calculateTotals(state);
+        state.loading = false;
       })
       .addCase(removeFromCartServer.fulfilled, (state, action) => {
         state.items = action.payload;
+        calculateTotals(state);
+        state.loading = false;
+      })
+      .addCase(clearCartServer.fulfilled, (state) => {
+        state.items = [];
+        state.totalQuantity = 0;
+        state.totalAmount = 0;
         state.loading = false;
       })
       .addMatcher(
@@ -200,5 +200,17 @@ const cart = createSlice({
   },
 });
 
-export const { addItem, removeItem, clearCart, updateQuantity } = cart.actions;
+export const selectCartSubtotal = (state) => state.cart.totalAmount;
+
+export const selectCartTax = (state) => {
+  const subtotal = state.cart.totalAmount;
+  return subtotal * 0.1;
+};
+
+export const selectCartTotal = (state) => {
+  const subtotal = state.cart.totalAmount;
+  const tax = subtotal * 0.1;
+  return subtotal + tax;
+};
+
 export default cart;

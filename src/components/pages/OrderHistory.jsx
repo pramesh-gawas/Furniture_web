@@ -4,6 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   updateQuantityServer,
   removeFromCartServer,
+  selectCartSubtotal,
+  selectCartTax,
+  selectCartTotal,
+  clearCartServer,
 } from "../../store/cartSlice";
 import { useNavigate } from "react-router-dom";
 import Toaster from "../common/Toaster";
@@ -13,6 +17,9 @@ export const OrderHistory = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const Navigate = useNavigate();
   const dispatch = useDispatch();
+  const subtotal = useSelector(selectCartSubtotal);
+  const tax = useSelector(selectCartTax);
+  const total = useSelector(selectCartTotal);
 
   const [toast, setToast] = useState({
     show: false,
@@ -51,23 +58,7 @@ export const OrderHistory = () => {
     }
   }, [items]);
 
-  const subtotal = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const tax = subtotal * 0.1;
-  const total = subtotal + tax;
-
   if (loading && items.length === 0) return <Spinner />;
-  // const subtotal = items.reduce(
-  //   (sum, item) => sum + item.price * item.quantity,
-  //   0
-  // );
-  // const tax = subtotal * 0.1;
-  // const total = subtotal + tax;
-  // const handleRemoveItem = (id) => {
-  //   dispatch(removeItem(id));
-  // };
 
   const handleInc = (item) => {
     const obj = {
@@ -115,7 +106,7 @@ export const OrderHistory = () => {
                     Items in Bag
                   </h2>
                   <button
-                    // onClick={() => dispatch(clearCart())}
+                    onClick={() => dispatch(clearCartServer())}
                     className="bg-blue-500 p-2 rounded-lg text-2xl font-semibold text-gray-900 dark:text-white mb-4"
                   >
                     Clear Cart
@@ -189,7 +180,7 @@ export const OrderHistory = () => {
                   </div>
                   <div className="flex justify-between text-xl font-bold text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 p-3 rounded">
                     <span>Total:</span>
-                    <span>{formatPrice(total)}</span>
+                    <span>{total || "0"}</span>
                   </div>
                   <button
                     onClick={() => handlePayment()}
