@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
+  clearCartServer,
   selectCartSubtotal,
   selectCartTax,
   selectCartTotal,
@@ -13,6 +14,7 @@ export const CheckOutPage = () => {
   const tax = useSelector(selectCartTax);
   const total = useSelector(selectCartTotal);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -52,13 +54,11 @@ export const CheckOutPage = () => {
       });
 
       const result = await res.json();
-      console.log(result);
 
       if (res.ok) {
         formElement.reset();
+        navigate(`/order-success/${result?.orderId}`);
         dispatch(clearCartServer());
-        navigate(`/order-success/${result.orderId}`);
-        console.log("Order placed successfully:", result);
       } else {
         console.error("Order failed:", result.message);
       }
