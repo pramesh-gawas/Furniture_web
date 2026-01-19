@@ -50,7 +50,7 @@ export const SignInLogIn = () => {
       dispatch(setCredentials({ user: decodedUser, token: token }));
       Navigate("/shop");
     }
-  }, [data, Navigate]);
+  }, [data, Navigate, dispatch]);
   const handleSetRegister = () => {
     setRegister(!register);
     if (register) {

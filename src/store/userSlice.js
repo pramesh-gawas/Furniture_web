@@ -1,11 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const savedUser = localStorage.getItem("user");
+const savedToken = localStorage.getItem("user");
+const getSavedUser = () => {
+  try {
+    const data = localStorage.getItem("user_data");
+    return data ? JSON.parse(data) : null;
+  } catch (err) {
+    return null;
+  }
+};
 
 const userData = createSlice({
   name: "auth",
   initialState: {
-    user: savedUser || null,
+    user: getSavedUser(),
+    token: savedToken || null,
     isLoading: false,
     error: null,
   },
@@ -16,13 +25,16 @@ const userData = createSlice({
       state.user = cleanUser;
       state.token = token;
       localStorage.setItem("user", token);
+      localStorage.setItem("user_data", JSON.stringify(cleanUser));
     },
     logout: (state) => {
       state.user = null;
+      state.token = null;
       localStorage.removeItem("user");
+      localStorage.removeItem("user_data");
     },
   },
 });
 
-export const { setCredentials, logout, setUser } = userData.actions;
+export const { setCredentials, logout } = userData.actions;
 export default userData;
