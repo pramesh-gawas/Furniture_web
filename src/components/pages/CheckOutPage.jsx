@@ -1,8 +1,19 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import {
+  selectCartSubtotal,
+  selectCartTax,
+  selectCartTotal,
+} from "../../store/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 export const CheckOutPage = () => {
   const { items } = useSelector((store) => store.cart);
+  const subtotal = useSelector(selectCartSubtotal);
+  const tax = useSelector(selectCartTax);
+  const total = useSelector(selectCartTotal);
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -18,19 +29,42 @@ export const CheckOutPage = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const subtotal = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const tax = subtotal * 0.1;
-  const total = subtotal + tax;
-
-  const handlePlaceOrder = (e) => {
+  const handlePlaceOrder = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const address = Object.fromEntries(formData.entries());
+    const token = localStorage.getItem("user");
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const formElement = e.currentTarget;
+    const formData = new FormData(formElement);
+    const shippingAddress = Object.fromEntries(formData.entries());
+    const orderData = {
+      cartItems: items,
+      shippingAddress: shippingAddress,
+    };
 
-    alert("Order placed successfully!");
+    try {
+      const res = await fetch(`${apiUrl}/shop/checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const result = await res.json();
+      console.log(result);
+
+      if (res.ok) {
+        formElement.reset();
+        dispatch(clearCartServer());
+        navigate(`/order-success/${result.orderId}`);
+        console.log("Order placed successfully:", result);
+      } else {
+        console.error("Order failed:", result.message);
+      }
+    } catch (err) {
+      console.error("Network error:", err.message);
+    }
   };
 
   return (
@@ -45,14 +79,14 @@ export const CheckOutPage = () => {
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">
                 Order Summary
               </h2>
-              {items.map((item) => (
+              {items.map((item, index) => (
                 <div
-                  key={item.id}
+                  key={index}
                   className="flex justify-between py-2 border-b border-gray-200"
                 >
-                  <span className="text-gray-700">{item.name}</span>
+                  <span className="text-gray-700">{item?.product?.name}</span>
                   <span className="text-gray-900 font-semibold">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    ${(item?.product?.price * item?.quantity).toFixed(2)}
                   </span>
                 </div>
               ))}
