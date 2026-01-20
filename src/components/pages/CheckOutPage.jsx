@@ -7,6 +7,7 @@ import {
   selectCartTotal,
 } from "../../store/cartSlice";
 import { useNavigate } from "react-router-dom";
+import { formatPrice } from "../common/Format";
 
 export const CheckOutPage = () => {
   const { items } = useSelector((store) => store.cart);
@@ -93,15 +94,15 @@ export const CheckOutPage = () => {
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <div className="flex justify-between mb-2 text-gray-700">
                   <span>Subtotal:</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>{formatPrice(subtotal.toFixed(2))}</span>
                 </div>
                 <div className="flex justify-between mb-4 text-gray-700">
                   <span>Tax (10%):</span>
-                  <span>${tax.toFixed(2)}</span>
+                  <span>{formatPrice(tax.toFixed(2))}</span>
                 </div>
                 <div className="flex justify-between text-xl font-bold text-gray-900 bg-gray-100 p-3 rounded">
                   <span>Total:</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>{formatPrice(total.toFixed(2))}</span>
                 </div>
               </div>
             </div>

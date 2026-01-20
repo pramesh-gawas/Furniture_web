@@ -53,6 +53,7 @@ export const Card = ({ item, setToast }) => {
         <img
           src={item?.images[0]}
           alt={item.name}
+          loading="lazy"
           className="w-full h-64 object-cover"
         />
       </Link>

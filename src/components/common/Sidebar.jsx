@@ -1,33 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { filterByCategory, setProducts } from "../../store/productSlice";
 import { useFetch } from "../../utils/useFetch";
-import { Spinner } from "./../common/Spinner";
 
 export const Sidebar = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const dispatch = useDispatch();
   const apiUrl = import.meta.env.VITE_API_URL;
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedSort, setSelectedSort] = useState("");
-  const { data, loading, error } = useFetch(
-    `${apiUrl}/shop/productlist?sort=${selectedSort}&category=${selectedCategory}`
-  );
-  const {
-    data: categoryData,
-    loading: categoryLoading,
-    error: categoryError,
-  } = useFetch(`${apiUrl}/shop/categories`);
   const categoryFromUrl = searchParams.get("category") || "all";
+  const [selectedCategory, setSelectedCategory] = useState(categoryFromUrl);
+  const [selectedSort, setSelectedSort] = useState("");
+  const { data: categoryData } = useFetch(`${apiUrl}/shop/categories`);
   useEffect(() => {
-    dispatch(filterByCategory(categoryFromUrl));
-  }, [categoryFromUrl, dispatch]);
+    setSelectedCategory(categoryFromUrl);
+  }, [categoryFromUrl]);
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
-    setSearchParams({ category: e.target.value });
   };
 
   const handleSortChange = (e) => {
@@ -35,7 +23,6 @@ export const Sidebar = () => {
   };
 
   const handleApply = () => {
-    dispatch(setProducts(data.response));
     setSearchParams({ category: selectedCategory, sort: selectedSort });
     setIsOpen(false);
   };
@@ -85,8 +72,8 @@ export const Sidebar = () => {
           >
             <option value="all">All</option>
             {categoryData?.response.map((category, index) => (
-              <option key={index} value={category}>
-                {category}
+              <option key={index} value={category.name}>
+                {category.name}
               </option>
             ))}
           </select>

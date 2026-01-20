@@ -2,6 +2,27 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
+export const fetchCategoryServer = createAsyncThunk(
+  "product/fetchCategoryServer",
+  async ({ page = 1, sort = "", category = "all" }, { rejectWithValue }) => {
+    try {
+      const url = `${apiUrl}/shop/productlist?page=${page}&sort=${sort}&category=${category}`;
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch products from the server");
+      }
+
+      const data = await response.json();
+
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  },
+);
+
 export const getProductsServer = createAsyncThunk(
   "product/getProductsServer",
   async (params = {}, { rejectWithValue }) => {
@@ -23,7 +44,7 @@ export const getProductsServer = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.message);
     }
-  }
+  },
 );
 
 const product = createSlice({
@@ -33,30 +54,10 @@ const product = createSlice({
     filteredItems: [],
     loading: false,
     error: null,
+    currentPage: 1,
+    totalPages: 1,
   },
-  reducers: {
-    setProducts: (state, action) => {
-      state.items = action.payload;
-      state.filteredItems = action.payload;
-    },
-    appendProducts: (state, action) => {
-      const newItems = action.payload.filter(
-        (newItem) => !state.items.find((oldItem) => oldItem._id === newItem._id)
-      );
-      state.items = [...state.items, ...newItems];
-      state.filteredItems = [...state.filteredItems, ...newItems];
-    },
-    filterByCategory: (state, action) => {
-      const category = action.payload;
-      if (category === "all") {
-        state.filteredItems = state.items;
-      } else {
-        state.filteredItems = state.items.filter(
-          (item) => item.category === category
-        );
-      }
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(getProductsServer.pending, (state) => {
@@ -68,6 +69,31 @@ const product = createSlice({
         state.items = action.payload;
       })
       .addCase(getProductsServer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(fetchCategoryServer.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCategoryServer.fulfilled, (state, action) => {
+        state.loading = false;
+
+        // Destructure the array (response) and the metadata from the payload
+        const { response, totalPages, currentPage } = action.payload;
+
+        if (currentPage === 1) {
+          // FIX: Set items to the ARRAY, not the whole object
+          state.items = response;
+        } else {
+          // Append logic for Load More
+          state.items = [...state.items, ...response];
+        }
+
+        state.totalPages = totalPages;
+        state.currentPage = currentPage;
+      })
+      .addCase(fetchCategoryServer.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
