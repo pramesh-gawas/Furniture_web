@@ -87,7 +87,9 @@ export const CheckOutPage = () => {
                 >
                   <span className="text-gray-700">{item?.product?.name}</span>
                   <span className="text-gray-900 font-semibold">
-                    ${(item?.product?.price * item?.quantity).toFixed(2)}
+                    {formatPrice(
+                      (item?.product?.price * item?.quantity).toFixed(2),
+                    )}
                   </span>
                 </div>
               ))}
