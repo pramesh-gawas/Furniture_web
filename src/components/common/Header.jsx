@@ -11,7 +11,6 @@ export const Header = () => {
   const navigation = [
     { name: "Home", href: "/" },
     { name: "Shop", href: "/shop" },
-    { name: "Checkout", href: "/checkout" },
   ];
 
   const mobileNavigation = [
@@ -19,7 +18,6 @@ export const Header = () => {
     { name: "Shop", href: "/shop" },
     { name: "Wish List", href: "/wish-list" },
     { name: "My Cart", href: "/order-history" },
-    { name: "Checkout", href: "/checkout" },
   ];
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

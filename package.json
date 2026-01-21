@@ -13,6 +13,8 @@
     "@headlessui/react": "^2.2.9",
     "@heroicons/react": "^2.2.0",
     "@reduxjs/toolkit": "^2.11.2",
+    "@stripe/react-stripe-js": "^5.4.1",
+    "@stripe/stripe-js": "^8.6.3",
     "@tailwindcss/vite": "^4.1.18",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
