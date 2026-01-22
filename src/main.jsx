@@ -14,6 +14,7 @@ import { Provider } from "react-redux";
 import Store from "./store/index.js";
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 import { OrderSuccess } from "./components/pages/OrderSuccess.jsx";
+import { PageNotFound } from "./components/common/PageNotFound.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
       { path: "/signIn", element: <SignInLogIn /> },
       { path: "/signUp", element: <SignInLogIn /> },
       { path: "/product/:id", element: <ProductDetail /> },
+      { path: "*", element: <PageNotFound /> },
 
       // Protected Route
       {
@@ -35,6 +37,7 @@ const router = createBrowserRouter([
           { path: "/order-success", element: <OrderSuccess /> },
         ],
       },
+      { path: "*", element: <PageNotFound /> },
     ],
   },
 ]);

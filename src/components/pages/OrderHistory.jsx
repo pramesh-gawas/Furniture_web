@@ -12,6 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Toaster from "../common/Toaster";
 import { Spinner } from "../common/Spinner";
+import { ConfirmModal } from "../common/ConfirmModel";
 export const OrderHistory = () => {
   const { items, loading, error } = useSelector((store) => store.cart);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -26,6 +27,8 @@ export const OrderHistory = () => {
     message: "",
     type: "success",
   });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (error) {
@@ -60,6 +63,10 @@ export const OrderHistory = () => {
 
   if (loading && items.length === 0) return <Spinner />;
 
+  const handleClearCart = () => {
+    dispatch(clearCartServer());
+  };
+
   const handleInc = (item) => {
     const obj = {
       productId: item?.product?._id,
@@ -84,6 +91,13 @@ export const OrderHistory = () => {
   return (
     <div className="min-h-screen py-32 px-4 dark:bg-gray-900">
       <div className="max-w-6xl mx-auto">
+        <ConfirmModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={handleClearCart}
+          title="Empty Cart?"
+          message="Are you sure you want to remove all items from your cart? This action cannot be undone."
+        />
         <h1 className="text-4xl font-bold text-gray-900 mb-8 dark:text-white">
           My Cart
         </h1>
@@ -106,7 +120,7 @@ export const OrderHistory = () => {
                     Items in Bag
                   </h2>
                   <button
-                    onClick={() => dispatch(clearCartServer())}
+                    onClick={() => setIsModalOpen(true)}
                     className="bg-blue-500 p-2 rounded-lg text-2xl font-semibold text-gray-900 dark:text-white mb-4"
                   >
                     Clear Cart

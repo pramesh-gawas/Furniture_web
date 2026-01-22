@@ -12,8 +12,18 @@ export const WishList = () => {
   const [toast, setToast] = useState({
     show: false,
     message: "",
-    type: "success",
+    type: "",
   });
+
+  useEffect(() => {
+    if (toast.show) {
+      const timer = setTimeout(() => {
+        setToast((prev) => ({ ...prev, show: false }));
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [toast.show]);
 
   useEffect(() => {
     if (error) {
@@ -35,7 +45,14 @@ export const WishList = () => {
   };
 
   const addToCart = (item) => {
-    dispatch(addToCartServer(item));
+    if (item) {
+      dispatch(addToCartServer(item));
+      setToast({
+        show: true,
+        message: `${item.name} added to cart`,
+        type: "success",
+      });
+    }
   };
 
   return (
