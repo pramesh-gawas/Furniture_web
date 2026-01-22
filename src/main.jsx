@@ -37,6 +37,7 @@ const router = createBrowserRouter([
           { path: "/order-success", element: <OrderSuccess /> },
         ],
       },
+      { path: "*", element: <PageNotFound /> },
     ],
   },
 ]);
